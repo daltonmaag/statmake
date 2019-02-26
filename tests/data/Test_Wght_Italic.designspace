@@ -1,0 +1,91 @@
+<?xml version="1.0" encoding="utf-8"?>
+<designspace format="4.0">
+  <axes>
+    <axis default="200" maximum="900" minimum="200" name="Weight" tag="wght">
+      <map input="200" output="0" />
+      <map input="300" output="100" />
+      <map input="333" output="333" />
+      <map input="400" output="368" />
+      <map input="600" output="600" />
+      <map input="650" output="789" />
+      <map input="700" output="824" />
+      <map input="900" output="1000" />
+    </axis>
+  </axes>
+
+  <sources>
+    <source filename="master1-ital.ufo" stylename="Extra Light Italic">
+      <info copy="1" />
+      <location>
+        <dimension name="Weight" xvalue="0" />
+      </location>
+    </source>
+    <source filename="master2-ital.ufo" stylename="Black Italic">
+      <location>
+        <dimension name="Weight" xvalue="1000" />
+      </location>
+    </source>
+  </sources>
+
+  <instances>
+    <instance stylename="Extra Light Italic">
+      <location>
+        <dimension name="Weight" xvalue="0" />
+      </location>
+      <kerning />
+      <info />
+    </instance>
+    <instance stylename="Light Italic">
+      <location>
+        <dimension name="Weight" xvalue="100" />
+      </location>
+      <kerning />
+      <info />
+    </instance>
+    <instance stylename="Italic">
+      <location>
+        <dimension name="Weight" xvalue="368" />
+      </location>
+      <kerning />
+      <info />
+    </instance>
+    <instance stylename="Semi Bold Italic">
+      <location>
+        <dimension name="Weight" xvalue="600" />
+      </location>
+      <kerning />
+      <info />
+    </instance>
+    <instance stylename="Bold Italic">
+      <location>
+        <dimension name="Weight" xvalue="824" />
+      </location>
+      <kerning />
+      <info />
+    </instance>
+    <instance stylename="Black Italic">
+      <location>
+        <dimension name="Weight" xvalue="1000" />
+      </location>
+      <kerning />
+      <info />
+    </instance>
+    <instance stylename="ASDF">
+      <location>
+        <dimension name="Weight" xvalue="333" />
+      </location>
+      <kerning />
+      <info />
+    </instance>
+  </instances>
+
+  <lib>
+    <dict>
+      <key>org.statmake.additionalLocations</key>
+      <dict>
+        <key>Italic</key>
+        <integer>1</integer>
+      </dict>
+    </dict>
+  </lib>
+</designspace>

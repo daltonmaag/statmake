@@ -1,0 +1,27 @@
+[tool.poetry]
+name = "statmake"
+version = "0.1.0"
+description = "Applies STAT information from a Stylespace to a variable font."
+authors = ["Nikolaus Waxweiler <nikolaus.waxweiler@daltonmaag.com>"]
+license = "MIT"
+
+[tool.poetry.dependencies]
+attrs = "^18.2"
+cattrs = "^0.9.0"
+fonttools = {version = "^3.38",extras = ["ufo"]}
+python = "^3.6"
+
+[tool.poetry.dev-dependencies]
+mypy = "^0.670.0"
+pylint = "^2.2"
+pytest = "^3.0"
+pytest-cov = "^2.6"
+ufo2ft = "^2.7"
+ufoLib2 = "^0.3.0"
+
+[tool.poetry.scripts]
+statmake = "statmake.cli:main"
+
+[build-system]
+requires = ["poetry>=0.12"]
+build-backend = "poetry.masonry.api"

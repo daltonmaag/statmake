@@ -1,0 +1,23 @@
+<?xml version='1.0' encoding='UTF-8'?><!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+  <dict>
+    <key>axes</key>
+    <array>
+      <dict>
+        <key>name</key>
+        <string>Weight</string>
+        <key>tag</key>
+        <string>wght</string>
+        <key>locations</key>
+        <array>
+          <dict>
+            <key>name</key>
+            <string>XLight</string>
+            <key>value</key>
+            <integer>200</integer>
+          </dict>
+        </array>
+      </dict>
+    </array>
+  </dict>
+</plist>
