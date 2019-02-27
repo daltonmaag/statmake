@@ -5,6 +5,8 @@ dist: xenial
 stages:
   - lint
   - test
+  - name: deploy
+    if: branch = master AND tag IS present
 
 cache:
   pip: true
@@ -26,6 +28,9 @@ jobs:
         - poetry install -v
       script:
         - pytest --cov
+    - stage: deploy
+      script:
+        - echo Deploying to PyPI...
 
 before_deploy:
   # User and password environment variables are set as hidden variables through
@@ -40,3 +45,4 @@ deploy:
   on:
     repo: daltonmaag/statmake
     tags: true
+    condition: $TRAVIS_BUILD_STAGE_NAME = Deploy
