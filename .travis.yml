@@ -6,7 +6,7 @@ stages:
   - lint
   - test
   - name: deploy
-    if: branch = master AND tag IS present
+    if: tag IS present
 
 cache:
   pip: true
@@ -43,5 +43,7 @@ deploy:
   script: poetry publish
   skip_cleanup: true
   on:
-    repo: daltonmaag/statmake
+    all_branches: true  # Travis recognizes tag names as "branches"
     condition: $TRAVIS_BUILD_STAGE_NAME = Deploy
+    repo: daltonmaag/statmake
+    tags: true
