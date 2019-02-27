@@ -44,5 +44,4 @@ deploy:
   skip_cleanup: true
   on:
     repo: daltonmaag/statmake
-    tags: true
     condition: $TRAVIS_BUILD_STAGE_NAME = Deploy
