@@ -2,6 +2,13 @@
 
 Apply user-defined `.stylespace` files to variable fonts to generate a `STAT` table.
 
+## Installation
+
+The easiest way is by installing it with `pip`. You need at least Python 3.6.
+
+```
+pip3 install statmake
+```
 
 ## Usage
 
