@@ -35,6 +35,8 @@ jobs:
 before_deploy:
   # User and password environment variables are set as hidden variables through
   # the web interface in the project settings.
+  - pip install --upgrade pip
+  - pip install poetry
   - poetry config http-basic.pypi $PYPI_USER $PYPI_PASS
   - poetry build
 
