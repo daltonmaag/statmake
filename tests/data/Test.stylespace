@@ -158,6 +158,10 @@
       The top-level `locations` key is a list of format 4 axis values. It is
       optional and can be left out from the Stylespace if you don't need format
       4 axis values.
+
+      ATTENTION: Using format 4 axis values bumps the STAT table version from 1.1 to
+      1.2. At the time of this writing (February 2019), version 1.2 is not supported by
+      Windows.
     -->
     <key>locations</key>
     <array>
