@@ -13,7 +13,7 @@ description = "An abstract syntax tree for Python with inference support."
 name = "astroid"
 optional = false
 python-versions = ">=3.4.*"
-version = "2.1.0"
+version = "2.2.0"
 
 [package.dependencies]
 lazy-object-proxy = "*"
@@ -21,8 +21,8 @@ six = "*"
 wrapt = "*"
 
 [package.dependencies.typed-ast]
-python = "<3.7"
-version = "*"
+python = ">=3.7"
+version = ">=1.3.0"
 
 [[package]]
 category = "dev"
@@ -166,6 +166,7 @@ version = "0.6.1"
 [[package]]
 category = "dev"
 description = "More routines for operating on iterables, beyond itertools"
+marker = "python_version > \"2.7\""
 name = "more-itertools"
 optional = false
 python-versions = ">=3.4"
@@ -221,10 +222,10 @@ description = "python code static checker"
 name = "pylint"
 optional = false
 python-versions = ">=3.4.*"
-version = "2.2.2"
+version = "2.3.0"
 
 [package.dependencies]
-astroid = ">=2.0.0"
+astroid = ">=2.2.0"
 colorama = "*"
 isort = ">=4.2.5"
 mccabe = "*"
@@ -235,17 +236,20 @@ description = "pytest: simple powerful testing with Python"
 name = "pytest"
 optional = false
 python-versions = ">=2.7, !=3.0.*, !=3.1.*, !=3.2.*, !=3.3.*"
-version = "3.10.1"
+version = "4.3.0"
 
 [package.dependencies]
 atomicwrites = ">=1.0"
 attrs = ">=17.4.0"
 colorama = "*"
-more-itertools = ">=4.0.0"
 pluggy = ">=0.7"
 py = ">=1.5.0"
 setuptools = "*"
 six = ">=1.10.0"
+
+[package.dependencies.more-itertools]
+python = ">2.7"
+version = ">=4.0.0"
 
 [[package]]
 category = "dev"
@@ -320,12 +324,12 @@ python-versions = "*"
 version = "1.11.1"
 
 [metadata]
-content-hash = "06c3e42da3303ecc1d1a08660a488f1e1566b82b75ffd194bf7a0018ca4555e4"
+content-hash = "fe79f69b7667a0cbb60d8efa27ec5b90ca417e676cb4b4886911724e75695d1b"
 python-versions = "^3.6"
 
 [metadata.hashes]
 appdirs = ["9e5896d1372858f8dd3344faf4e5014d21849c756c8d5701f78f8a103b372d92", "d8b24664561d0d34ddfaec54636d502d7cea6e29c3eaf68f3df6180863e2166e"]
-astroid = ["35b032003d6a863f5dcd7ec11abd5cd5893428beaa31ab164982403bcb311f22", "6a5d668d7dc69110de01cdf7aeec69a679ef486862a0850cc0fd5571505b6b7e"]
+astroid = ["1d5d0e6e408701ae657342645465d08be6fb66cf0ede16a31cc6435bd2e61718", "8fc40235cd184bff5d7b8e1284a647005cbd36bbc87d0c39f6f6389ae26e17ad"]
 atomicwrites = ["03472c30eb2c5d1ba9227e4c2ca66ab8287fbfbbda3888aa93dc2e28fc6811b4", "75a9445bac02d8d058d5e1fe689654ba5a6556a1dfd8ce6ec55a0ed79866cfa6"]
 attrs = ["10cbf6e27dbce8c30807caf056c8eb50917e0eaafe86347671b57254006c3e69", "ca4be454458f9dec299268d472aaa5a11f67a4ff70093396e1ceae9c76cf4bbb"]
 booleanoperations = ["1750def605e53ca13cf45fedd31b360d241cc6082523e4b71d86c72dd3e9bc8a", "5163839dfe337ff7e30e80feee47a82a9720c972b5ae7779118aa995c30d731b"]
@@ -346,8 +350,8 @@ mypy-extensions = ["37e0e956f41369209a3d5f34580150bcacfabaa57b33a15c0b25f4b5725e
 pluggy = ["19ecf9ce9db2fce065a7a0586e07cfb4ac8614fe96edf628a264b1c70116cf8f", "84d306a647cc805219916e62aab89caa97a33a1dd8c342e87a37f91073cd4746"]
 py = ["64f65755aee5b381cea27766a3a147c3f15b9b6b9ac88676de66ba2ae36793fa", "dc639b046a6e2cff5bbe40194ad65936d6ba360b52b3c3fe1d08a82dd50b5e53"]
 pyclipper = ["0b37d39bd9d4f330918de20c169e7d74108217a752533ec6ac54c6a8825adcec", "0d99acc5618faf8772164a3a067c1d1abd4513cf66b7b7a8d7adaa150a18376d", "4c4e9a643f6866f1ea4361b83a6a5c6a0d64e6a391a286e79b7f0844c2ae3c2a", "567947b8e31de852be32941872a72e843e679af8cf0826108be0a4c6108792a3", "623ab16641e4e408359420d615c6a395cb3da23a559a20e57402bebb216bd125", "6aa4bce5111e0bd2c50d452d940ddd87ef6c2632b2da6952fe2dec4f5e103173", "747bfd3e219d5f2c45e50d874ea6da4ae746b3a4601f28566fd29a6ab0966a7a", "78ebe32ccb6807bc8eac652ec9a7875dfa229e947b686a107acaf69259da3d8d", "7ecf2cc782ab3e3d33120aa3fc9da1bfd72155c6ad2ee358d14b81865dda2d65", "888e04d29717e9c47336c814094bd9523b3ec9ed371ce91dfa60636aae1de6f6", "8a8b6018d53fcce291f78dedca19994f82695eed3a2c9eff275691d4ed9aab51", "8bb79a30fd6078e589b39c164acd969d3f5f942a566b7e951c941f6d5c7106fe", "8f8ff492926c2d865bc58121bc15438e8698d8a9b7751b67892ef3516838d462", "abfb4c65937494bb5a3bb5fb3cf44cdb33ac88805effcd702afdb0d7bfb1803f", "acfbfe2a3e236a474100393661291681419ec89e74fb6a51db5325ddd280ab9a", "b03d1dcac192412a1f7125500dcd09baa0ccf9c27f1300870e80981907197583", "ba98f5472d6066386367a3e8d44c327b5438e746a7faf356e6b116338fe6492e", "bb89da8a321a9662330f18c1f8a88dd44966160e7a9e25c86ca16fbc1be31c0d", "bed37f2d2517e18976aa24477cce319fd48efa8fbafe9407101c599ba4a2b481", "c0fb993da9ef2ce62a9f62dcb14fff16f90bae57c073d8d4187072490eb41a68", "c964d5808aa5e44aae9500e70d3f08d5191edf6a355e183d8c6fb8f43dde77ad", "d6a2186a8a85121ee2732bd28c2243dd0451d8095d5e8426351b845fa409b974", "db6d0580bac8a642a31b0e07f220d3c94fe2dda39f559abc2d12713bff7dd3d0", "de693b6da86fbb69bf224bc89abfe479df205e827e20b4a431b03e37b2b5ee34", "e17d8d1adc834112ee8b092661da6231f7cfba9700297069c6b5bce71c07b9b4", "f064528ffb7486b1b2b21f833c729a63e5331e2e6073dfbc73b1d5e96a4d00a2", "f5e003f9ec3ced16691b7b0dbee39318aba3787ba85d01ef1f6627592c3ff75d", "fae29ba16ec075794c50242005be07fc3d5615b0cf3a86e2b60c1123446b574c"]
-pylint = ["689de29ae747642ab230c6d37be2b969bf75663176658851f456619aacf27492", "771467c434d0d9f081741fec1d64dfb011ed26e65e12a28fe06ca2f61c4d556c"]
-pytest = ["3f193df1cfe1d1609d4c583838bea3d532b18d6160fd3f55c9447fdca30848ec", "e246cf173c01169b9617fc07264b7b1316e78d7a650055235d6d897bc80d9660"]
+pylint = ["2bf4bd58d6d5d87174fbc9d1d134a9aeee852d4dc29cbd422a7015772770bc63", "ee80c7af4f127b2a480d83010c9f0e97beb8eaa652b78c2837d3ed30b12e1182"]
+pytest = ["067a1d4bf827ffdd56ad21bd46674703fce77c5957f6c1eef731f6146bfcef1c", "9687049d53695ad45cf5fdc7bbd51f0c49f1ea3ecfc4b7f3fde7501b541f17f4"]
 pytest-cov = ["0ab664b25c6aa9716cbf203b17ddb301932383046082c081b9848a0edf5add33", "230ef817450ab0699c6cc3c9c8f7a829c34674456f2ed8df1fe1d39780f7c87f"]
 pytz = ["32b0891edff07e28efe91284ed9c31e123d84bea3fd98e1f72be2508f43ef8d9", "d5f05e487007e29e03409f9398d074e158d920d36eb82eaf66fb1136b0c5374c"]
 six = ["3350809f0555b11f552448330d0b52d5f24c91a322ea4a15ef22629740f3761c", "d16a0141ec1a18405cd4ce8b4613101da75da0e9a7aec5bdd4fa804d0e0eba73"]

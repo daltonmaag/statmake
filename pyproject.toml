@@ -16,7 +16,7 @@ python = "^3.6"
 [tool.poetry.dev-dependencies]
 mypy = "^0.670.0"
 pylint = "^2.2"
-pytest = "^3.0"
+pytest = "^4.0"
 pytest-cov = "^2.6"
 ufo2ft = "^2.7"
 ufoLib2 = "^0.3.0"
