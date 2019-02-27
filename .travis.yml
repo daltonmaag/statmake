@@ -28,8 +28,8 @@ jobs:
         - pytest --cov
 
 before_deploy:
-  # User and password environment variables are set through the web interface
-  # in the project settings.
+  # User and password environment variables are set as hidden variables through
+  # the web interface in the project settings.
   - poetry config http-basic.pypi $PYPI_USER $PYPI_PASS
   - poetry build
 
