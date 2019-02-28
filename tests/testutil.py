@@ -89,7 +89,7 @@ def reload_font(font):
 
 
 def generate_variable_font(
-    designspace_path: Path, stylespace_path: Path
+    designspace_path: Path, stylespace_path: Path, additional_locations=None
 ) -> fontTools.ttLib.TTFont:
     designspace = fontTools.designspaceLib.DesignSpaceDocument.fromfile(
         designspace_path
@@ -100,7 +100,10 @@ def generate_variable_font(
     varfont, _, _ = fontTools.varLib.build(designspace)
 
     stylespace = statmake.classes.Stylespace.from_file(stylespace_path)
-    additional_locations = designspace.lib.get("org.statmake.additionalLocations", {})
+    if additional_locations is None:
+        additional_locations = designspace.lib.get(
+            "org.statmake.additionalLocations", {}
+        )
     statmake.lib.apply_stylespace_to_variable_font(
         stylespace, varfont, additional_locations
     )

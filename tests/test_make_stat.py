@@ -20,6 +20,25 @@ def test_load_stylespace_no_format4(datadir):
     statmake.classes.Stylespace.from_file(datadir / "TestNoFormat4.stylespace")
 
 
+def test_generation_incomplete_stylespace(datadir):
+    with pytest.raises(ValueError, match=r".* no Stylespace entry .*"):
+        _ = testutil.generate_variable_font(
+            datadir / "Test_Wght_Italic.designspace",
+            datadir / "TestIncomplete.stylespace",
+        )
+
+
+def test_generation_incomplete_additional_location(datadir):
+    with pytest.raises(
+        ValueError, match=r".* no Stylespace entry .* additional locations.*"
+    ):
+        _ = testutil.generate_variable_font(
+            datadir / "Test_Wght_Italic.designspace",
+            datadir / "Test.stylespace",
+            {"Italic": 2},
+        )
+
+
 def test_generation_full(datadir):
     varfont = testutil.generate_variable_font(
         datadir / "Test_WghtItal.designspace", datadir / "Test.stylespace"

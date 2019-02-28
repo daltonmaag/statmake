@@ -74,15 +74,33 @@ def generate_name_and_STAT_variable(
         name_to_index[stylespace_axis.name.default] = index
 
     # First, determine which stops are used on which axes. The STAT table must contain
-    # a name for each stop that is used on each axis. Also include locations in
-    # additional_locations that can refer to axes not present in the current varfont.
-    axis_stops: Mapping[str, Set[int]] = collections.defaultdict(set)  # tag to stops
+    # a name for each stop that is used on each axis, so each stop must have an entry
+    # in the Stylespace. Also include locations in additional_locations that can refer
+    # to axes not present in the current varfont.
+    stylespace_stops: Dict[str, Set[float]] = {}
+    for axis in stylespace.axes:
+        stylespace_stops[axis.tag] = {l.value for l in axis.locations}
+    for named_location in stylespace.locations:
+        for name, value in named_location.axis_values.items():
+            stylespace_stops[name_to_tag[name]].add(value)
+
+    axis_stops: Mapping[str, Set[float]] = collections.defaultdict(set)  # tag to stops
     for instance in varfont["fvar"].instances:
         for k, v in instance.coordinates.items():
+            if v not in stylespace_stops[k]:
+                raise ValueError(
+                    f"There is no Stylespace entry for stop {v} on axis {k}."
+                )
             axis_stops[k].add(v)
 
     for k, v in additional_locations.items():
-        axis_stops[name_to_tag[k]].add(v)
+        axis_tag = name_to_tag[k]
+        if v not in stylespace_stops[axis_tag]:
+            raise ValueError(
+                f"There is no Stylespace entry for stop {v} on axis {k} (from "
+                "additional locations)."
+            )
+        axis_stops[axis_tag].add(v)
 
     # Construct temporary name and STAT tables for returning at the end.
     name_table = copy.deepcopy(varfont["name"])
