@@ -8,18 +8,18 @@ readme = "README.md"
 repository = "https://github.com/daltonmaag/statmake"
 
 [tool.poetry.dependencies]
-attrs = "^18.2"
+attrs = ">= 18.2"
 cattrs = "^0.9.0"
 fonttools = {version = "^3.38",extras = ["ufo"]}
 python = "^3.6"
 
 [tool.poetry.dev-dependencies]
-mypy = "^0.670.0"
-pylint = "^2.2"
-pytest = "^4.0"
-pytest-cov = "^2.6"
+mypy = "*"
+pylint = "*"
+pytest = "*"
+pytest-cov = "*"
 ufo2ft = "^2.7"
-ufoLib2 = "^0.3.0"
+ufoLib2 = "^0.3"
 
 [tool.poetry.scripts]
 statmake = "statmake.cli:main"
