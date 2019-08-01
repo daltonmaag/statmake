@@ -1,6 +1,6 @@
 # statmake
 
-Apply user-defined `.stylespace` files to variable fonts to generate a `STAT` table.
+`statmake` takes a user-written Stylespace that defines [OpenType `STAT` information](https://docs.microsoft.com/en-us/typography/opentype/spec/stat) for an entire font family and then subsets and applies it to a specific variable font.
 
 ## Installation
 
