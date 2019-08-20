@@ -157,11 +157,11 @@ def generate_name_and_STAT_variable(
 
 
 def _default_name_string(otfont: fontTools.ttLib.TTFont, name_id: int) -> str:
-    """Return first name table match for name_id for language 'en'."""
-    name = otfont["name"].getName(name_id, 3, 1, 0x0409).toUnicode()
+    """Return English name for name_id."""
+    name = otfont["name"].getDebugName(name_id)
     if name is not None:
         return name
-    raise ValueError(f"No default Windows record for id {name_id}.")
+    raise ValueError(f"No English record for id {name_id} for Windows platform.")
 
 
 def _new_empty_STAT_table():
