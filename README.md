@@ -16,3 +16,7 @@ pip3 install statmake
 2. If you have one or more Designspace files which do not define all axes available to the family, you have to annotate them with the missing axis locations to get a complete `STAT` table. See the lib key at the bottom of [tests/data/Test_Wght_Upright.designspace](tests/data/Test_Wght_Upright.designspace) and [tests/data/Test_Wght_Italic.designspace](tests/data/Test_Wght_Italic.designspace) for an example.
 3. Generate the variable font(s) as normal
 4. Run `statmake your.stylespace variable_font.designspace variable_font.ttf`. Take care to use the Designspace file that was used to generate the font to get the correct missing axis location definitions.
+
+### Q: Can I please have something other than a .plist file?
+
+Yes, but you have to convert it to `.plist` yourself, as statmake currently only read `.plist` files. One possible converter is Adam Twardoch's [yaplon](https://pypi.org/project/yaplon/).
