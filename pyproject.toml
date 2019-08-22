@@ -10,7 +10,7 @@ repository = "https://github.com/daltonmaag/statmake"
 [tool.poetry.dependencies]
 attrs = ">= 18.2"
 cattrs = "^0.9.0"
-fonttools = {version = "^3.38",extras = ["ufo"]}
+fonttools = {version = "^3.38", extras = ["ufo"]}
 python = "^3.6"
 
 [tool.poetry.dev-dependencies]
