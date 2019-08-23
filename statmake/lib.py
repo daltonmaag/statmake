@@ -2,7 +2,6 @@ import collections
 import copy
 from typing import Dict, Mapping, Optional, Set
 
-import fontTools.misc.py23
 import fontTools.ttLib
 import fontTools.ttLib.tables.otTables as otTables
 
@@ -179,7 +178,7 @@ def _new_axis_record(tag: str, name_id: int, ordering: Optional[int]):
     if ordering is None:
         raise ValueError("ordering must be an integer.")
     axis_record = otTables.AxisRecord()
-    axis_record.AxisTag = fontTools.misc.py23.Tag(tag)
+    axis_record.AxisTag = tag
     axis_record.AxisNameID = name_id
     axis_record.AxisOrdering = ordering
     return axis_record
