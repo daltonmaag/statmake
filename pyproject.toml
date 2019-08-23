@@ -9,8 +9,8 @@ repository = "https://github.com/daltonmaag/statmake"
 
 [tool.poetry.dependencies]
 attrs = ">= 18.2"
-cattrs = "^0.9.0"
-fonttools = {version = "^3.38",extras = ["ufo"]}
+cattrs = ">= 0.9"
+fonttools = {version = ">= 3.38", extras = ["ufo"]}
 python = "^3.6"
 
 [tool.poetry.dev-dependencies]
@@ -19,7 +19,7 @@ pylint = "*"
 pytest = "*"
 pytest-cov = "*"
 ufo2ft = "^2.7"
-ufoLib2 = "^0.4"
+ufoLib2 = ">= 0.4"
 
 [tool.poetry.scripts]
 statmake = "statmake.cli:main"
