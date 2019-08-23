@@ -14,10 +14,10 @@ fonttools = {version = ">= 3.38", extras = ["ufo"]}
 python = "^3.6"
 
 [tool.poetry.dev-dependencies]
-mypy = "*"
 pylint = "*"
 pytest = "*"
 pytest-cov = "*"
+pytest-mypy = "*"
 ufo2ft = "^2.7"
 ufoLib2 = ">= 0.4"
 
