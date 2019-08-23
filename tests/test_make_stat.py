@@ -1,5 +1,7 @@
 import pytest
 
+import fontTools.designspaceLib
+
 import statmake.classes
 import statmake.lib
 
@@ -18,6 +20,21 @@ def test_load_stylespace_broken_ordering(datadir):
 
 def test_load_stylespace_no_format4(datadir):
     statmake.classes.Stylespace.from_file(datadir / "TestNoFormat4.stylespace")
+
+
+def test_load_from_designspace(datadir):
+    designspace = fontTools.designspaceLib.DesignSpaceDocument.fromfile(
+        datadir / "TestInlineStylespace.designspace"
+    )
+    statmake.classes.Stylespace.from_designspace(designspace)
+
+
+def test_load_from_broken_designspace(datadir):
+    designspace = fontTools.designspaceLib.DesignSpaceDocument.fromfile(
+        datadir / "TestNoFormat4.stylespace"
+    )
+    with pytest.raises(ValueError, match=r".* lib .*"):
+        statmake.classes.Stylespace.from_designspace(designspace)
 
 
 def test_generation_incomplete_stylespace(datadir):

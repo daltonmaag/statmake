@@ -5,7 +5,10 @@ from typing import Any, List, Mapping, Optional, Tuple, Union
 
 import attr
 import cattr
+import fontTools.designspaceLib
 import fontTools.misc.plistlib
+
+DESIGNSPACE_STYLESPACE_KEY = "org.statmake.stylespace"
 
 
 class AxisValueFlag(enum.Flag):
@@ -175,8 +178,8 @@ class Stylespace:
             )
 
     @classmethod
-    def from_bytes(cls, stylespace_content: bytes):
-        stylespace_content_parsed = fontTools.misc.plistlib.loads(stylespace_content)
+    def from_dict(cls, dict_data: dict):
+        """Construct Stylespace from unstructured dict data."""
         converter = cattr.Converter()
         converter.register_structure_hook(
             FlagList,
@@ -187,11 +190,30 @@ class Stylespace:
         converter.register_structure_hook(
             NameRecord, lambda data, cls: cls.structure(data)
         )
-        stylespace = converter.structure(stylespace_content_parsed, cls)
-        return stylespace
+        return converter.structure(dict_data, cls)
+
+    @classmethod
+    def from_bytes(cls, stylespace_content: bytes):
+        """Construct Stylespace from bytes containing (XML) plist data."""
+        stylespace_content_parsed = fontTools.misc.plistlib.loads(stylespace_content)
+        return cls.from_dict(stylespace_content_parsed)
 
     @classmethod
     def from_file(cls, stylespace_path: os.PathLike):
+        """Construct Stylespace from path to (XML) plist file."""
         with open(stylespace_path, "rb") as fp:
-            stylespace = cls.from_bytes(fp.read())
-        return stylespace
+            return cls.from_bytes(fp.read())
+
+    @classmethod
+    def from_designspace(
+        cls, designspace: fontTools.designspaceLib.DesignSpaceDocument
+    ):
+        f"""Construct Stylespace from unstructured dict data stored in a
+        Designspace object's lib in the `{DESIGNSPACE_STYLESPACE_KEY}` key."""
+        if DESIGNSPACE_STYLESPACE_KEY not in designspace.lib:
+            raise ValueError(
+                "Designspace lib must contain Stylespace data in key "
+                f"`{DESIGNSPACE_STYLESPACE_KEY}`."
+            )
+        stylespace_content = designspace.lib[DESIGNSPACE_STYLESPACE_KEY]
+        return cls.from_dict(stylespace_content)

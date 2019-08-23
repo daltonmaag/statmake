@@ -1,0 +1,168 @@
+<?xml version="1.0" encoding="utf-8"?>
+<designspace format="4.0">
+  <axes>
+    <axis default="200" maximum="900" minimum="200" name="Weight" tag="wght">
+      <map input="200" output="0" />
+      <map input="300" output="100" />
+      <map input="333" output="333" />
+      <map input="400" output="368" />
+      <map input="600" output="600" />
+      <map input="650" output="789" />
+      <map input="700" output="824" />
+      <map input="900" output="1000" />
+    </axis>
+  </axes>
+
+  <sources>
+    <source filename="master1.ufo" stylename="Extra Light">
+      <location>
+        <dimension name="Weight" xvalue="0" />
+      </location>
+    </source>
+    <source filename="master2.ufo" stylename="Black">
+      <location>
+        <dimension name="Weight" xvalue="1000" />
+      </location>
+    </source>
+  </sources>
+
+  <instances>
+    <instance stylename="Extra Light">
+      <location>
+        <dimension name="Weight" xvalue="0" />
+      </location>
+    </instance>
+    <instance stylename="Light">
+      <location>
+        <dimension name="Weight" xvalue="100" />
+      </location>
+    </instance>
+    <instance stylename="Regular">
+      <location>
+        <dimension name="Weight" xvalue="368" />
+      </location>
+    </instance>
+    <instance stylename="Semi Bold">
+      <location>
+        <dimension name="Weight" xvalue="600" />
+      </location>
+    </instance>
+    <instance stylename="Bold">
+      <location>
+        <dimension name="Weight" xvalue="824" />
+      </location>
+    </instance>
+    <instance stylename="Black">
+      <location>
+        <dimension name="Weight" xvalue="1000" />
+      </location>
+    </instance>
+  </instances>
+
+  <lib>
+    <dict>
+      <key>org.statmake.stylespace</key>
+      <dict>
+        <key>axes</key>
+        <array>
+          <dict>
+            <key>name</key>
+            <string>Weight</string>
+            <key>tag</key>
+            <string>wght</string>
+            <key>locations</key>
+            <array>
+              <dict>
+                <key>name</key>
+                <string>XLight</string>
+                <key>value</key>
+                <integer>200</integer>
+              </dict>
+              <dict>
+                <key>name</key>
+                <string>Light</string>
+                <key>value</key>
+                <integer>300</integer>
+              </dict>
+              <dict>
+                <key>name</key>
+                <dict>
+                  <key>en</key>
+                  <string>Regular</string>
+                  <key>de</key>
+                  <string>Regulär</string>
+                </dict>
+                <key>value</key>
+                <integer>400</integer>
+                <key>linked_value</key>
+                <integer>700</integer>
+                <key>flags</key>
+                <array>
+                  <string>ElidableAxisValueName</string>
+                </array>
+              </dict>
+              <dict>
+                <key>name</key>
+                <string>Semi Bold</string>
+                <key>value</key>
+                <integer>600</integer>
+              </dict>
+              <dict>
+                <key>name</key>
+                <dict>
+                  <key>en</key>
+                  <string>Bold</string>
+                </dict>
+                <key>value</key>
+                <integer>700</integer>
+              </dict>
+              <dict>
+                <key>name</key>
+                <string>Black</string>
+                <key>value</key>
+                <integer>900</integer>
+                <key>range</key>
+                <array>
+                  <integer>701</integer>
+                  <integer>900</integer>
+                </array>
+              </dict>
+            </array>
+          </dict>
+          <dict>
+            <key>name</key>
+            <string>Italic</string>
+            <key>tag</key>
+            <string>ital</string>
+            <key>locations</key>
+            <array>
+              <dict>
+                <key>name</key>
+                <string>Upright</string>
+                <key>value</key>
+                <integer>0</integer>
+                <key>linked_value</key>
+                <integer>1</integer>
+                <key>flags</key>
+                <array>
+                  <string>ElidableAxisValueName</string>
+                </array>
+              </dict>
+              <dict>
+                <key>name</key>
+                <string>Italic</string>
+                <key>value</key>
+                <integer>1</integer>
+              </dict>
+            </array>
+          </dict>
+        </array>
+      </dict>
+      <key>org.statmake.additionalLocations</key>
+      <dict>
+        <key>Italic</key>
+        <integer>0</integer>
+      </dict>
+    </dict>
+  </lib>
+</designspace>

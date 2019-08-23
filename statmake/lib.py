@@ -89,7 +89,7 @@ def generate_name_and_STAT_variable(
         for k, v in instance.coordinates.items():
             if v not in stylespace_stops[k]:
                 raise ValueError(
-                    f"There is no Stylespace entry for stop {v} on axis {k}."
+                    f"There is no Stylespace entry for stop {v} on the '{k}' axis."
                 )
             axis_stops[k].add(v)
 
@@ -97,7 +97,7 @@ def generate_name_and_STAT_variable(
         axis_tag = name_to_tag[k]
         if v not in stylespace_stops[axis_tag]:
             raise ValueError(
-                f"There is no Stylespace entry for stop {v} on axis {k} (from "
+                f"There is no Stylespace entry for stop {v} on the '{k}' axis (from "
                 "additional locations)."
             )
         axis_stops[axis_tag].add(v)
