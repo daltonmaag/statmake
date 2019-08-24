@@ -13,6 +13,15 @@ cache:
   directories:
     - "$HOME/.cache/pre-commit"
 
+# The following prevents Travis from running CI on pull requests that come from a
+# branch in the same repository. Without this, it will run the same CI for the
+# pull request branch _and_ the pull request itself, which makes no sense.
+branches:
+  only:
+    - master
+    # We want to build version tags as well.
+    - /^v\d+\.\d+.*$/
+
 jobs:
   include:
     - stage: lint
