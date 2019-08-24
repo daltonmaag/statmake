@@ -25,6 +25,23 @@ def test_cli_stylespace_in_designspace(datadir, tmp_path):
     assert v == TEST_WGHT_UPRIGHT_STAT_DUMP
 
 
+def test_cli_designspace_stylespace_external(datadir, tmp_path):
+    varfont = empty_varfont(datadir / "Test_Wght_Upright.designspace")
+    varfont.save(tmp_path / "varfont.ttf")
+
+    statmake.cli.main(
+        [
+            "-m",
+            str(datadir / "TestExternalStylespace.designspace"),
+            str(tmp_path / "varfont.ttf"),
+        ]
+    )
+
+    font = fontTools.ttLib.TTFont(tmp_path / "varfont.ttf")
+    v = testutil.dump_axis_values(font, font["STAT"].table.AxisValueArray.AxisValue)
+    assert v == TEST_WGHT_UPRIGHT_STAT_DUMP
+
+
 def test_cli_stylespace_external(datadir, tmp_path):
     varfont = empty_varfont(datadir / "Test_Wght_Upright.designspace")
     varfont.save(tmp_path / "varfont.ttf")
