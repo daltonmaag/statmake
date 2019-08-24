@@ -1,11 +1,16 @@
 import enum
 import functools
 import os
+from pathlib import Path
 from typing import Any, List, Mapping, Optional, Tuple, Union
 
 import attr
 import cattr
+import fontTools.designspaceLib
 import fontTools.misc.plistlib
+
+DESIGNSPACE_STYLESPACE_INLINE_KEY = "org.statmake.stylespace"
+DESIGNSPACE_STYLESPACE_PATH_KEY = "org.statmake.stylespacePath"
 
 
 class AxisValueFlag(enum.Flag):
@@ -175,8 +180,8 @@ class Stylespace:
             )
 
     @classmethod
-    def from_bytes(cls, stylespace_content: bytes):
-        stylespace_content_parsed = fontTools.misc.plistlib.loads(stylespace_content)
+    def from_dict(cls, dict_data: dict):
+        """Construct Stylespace from unstructured dict data."""
         converter = cattr.Converter()
         converter.register_structure_hook(
             FlagList,
@@ -187,11 +192,53 @@ class Stylespace:
         converter.register_structure_hook(
             NameRecord, lambda data, cls: cls.structure(data)
         )
-        stylespace = converter.structure(stylespace_content_parsed, cls)
-        return stylespace
+        return converter.structure(dict_data, cls)
+
+    @classmethod
+    def from_bytes(cls, stylespace_content: bytes):
+        """Construct Stylespace from bytes containing (XML) plist data."""
+        stylespace_content_parsed = fontTools.misc.plistlib.loads(stylespace_content)
+        return cls.from_dict(stylespace_content_parsed)
 
     @classmethod
     def from_file(cls, stylespace_path: os.PathLike):
+        """Construct Stylespace from path to (XML) plist file."""
         with open(stylespace_path, "rb") as fp:
-            stylespace = cls.from_bytes(fp.read())
-        return stylespace
+            return cls.from_bytes(fp.read())
+
+    @classmethod
+    def from_designspace(
+        cls, designspace: fontTools.designspaceLib.DesignSpaceDocument
+    ):
+        f"""Construct Stylespace from unstructured dict data or a path stored in a
+        Designspace object's lib.
+
+        The keys:
+
+        - `{DESIGNSPACE_STYLESPACE_INLINE_KEY}`: The content of a regular Stylespace
+          file as a dict.
+        - `{DESIGNSPACE_STYLESPACE_PATH_KEY}`: A path to an external Stylespace file,
+          relative to the Designspace file (the Designspace object must have the `path`
+          attribute set).
+        """
+        stylespace_inline = designspace.lib.get(DESIGNSPACE_STYLESPACE_INLINE_KEY)
+        stylespace_path = designspace.lib.get(DESIGNSPACE_STYLESPACE_PATH_KEY)
+
+        if (stylespace_inline and stylespace_path) or (
+            not stylespace_inline and not stylespace_path
+        ):
+            raise ValueError(
+                "Designspace lib must contain EITHER inline Stylespace data OR a path "
+                "to an external Stylespace file."
+            )
+
+        if stylespace_inline:
+            return cls.from_dict(stylespace_inline)
+
+        if not designspace.path:
+            raise ValueError(
+                "Designspace object must have `path` attribute set, because the "
+                "Stylespace path is relative to the Designspace file."
+            )
+        stylespace_path_lookup = Path(designspace.path).parent / stylespace_path
+        return cls.from_file(stylespace_path_lookup)

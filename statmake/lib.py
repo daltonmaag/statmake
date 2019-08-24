@@ -2,7 +2,6 @@ import collections
 import copy
 from typing import Dict, Mapping, Optional, Set
 
-import fontTools.misc.py23
 import fontTools.ttLib
 import fontTools.ttLib.tables.otTables as otTables
 
@@ -89,7 +88,7 @@ def generate_name_and_STAT_variable(
         for k, v in instance.coordinates.items():
             if v not in stylespace_stops[k]:
                 raise ValueError(
-                    f"There is no Stylespace entry for stop {v} on axis {k}."
+                    f"There is no Stylespace entry for stop {v} on the '{k}' axis."
                 )
             axis_stops[k].add(v)
 
@@ -97,7 +96,7 @@ def generate_name_and_STAT_variable(
         axis_tag = name_to_tag[k]
         if v not in stylespace_stops[axis_tag]:
             raise ValueError(
-                f"There is no Stylespace entry for stop {v} on axis {k} (from "
+                f"There is no Stylespace entry for stop {v} on the '{k}' axis (from "
                 "additional locations)."
             )
         axis_stops[axis_tag].add(v)
@@ -179,7 +178,7 @@ def _new_axis_record(tag: str, name_id: int, ordering: Optional[int]):
     if ordering is None:
         raise ValueError("ordering must be an integer.")
     axis_record = otTables.AxisRecord()
-    axis_record.AxisTag = fontTools.misc.py23.Tag(tag)
+    axis_record.AxisTag = tag
     axis_record.AxisNameID = name_id
     axis_record.AxisOrdering = ordering
     return axis_record

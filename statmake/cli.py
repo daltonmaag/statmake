@@ -1,4 +1,5 @@
 import argparse
+import logging
 import sys
 from pathlib import Path
 
@@ -10,31 +11,45 @@ import statmake.lib
 
 
 def main(args=None):
-    if not args:
-        args = sys.argv[1:]
-
     parser = argparse.ArgumentParser()
     parser.add_argument(
-        "stylespace_file", type=Path, help="The path to the Stylespace file."
+        "--stylespace",
+        type=statmake.classes.Stylespace.from_file,
+        help=(
+            "The path to the Stylespace file, if it is not contained in the "
+            "Designspace."
+        ),
     )
     parser.add_argument(
-        "designspace_file",
-        type=Path,
+        "--designspace",
+        "-m",
+        required=True,
+        type=fontTools.designspaceLib.DesignSpaceDocument.fromfile,
         help="The path to the Designspace file used to generate the variable font.",
+    )
+    parser.add_argument(
+        "--output-path",
+        type=Path,
+        help="Write the modified font to this path instead of in-place.",
     )
     parser.add_argument(
         "variable_font", type=Path, help="The path to the variable font file."
     )
     parsed_args = parser.parse_args(args)
+    designspace = parsed_args.designspace
 
-    stylespace = statmake.classes.Stylespace.from_file(parsed_args.stylespace_file)
-    designspace = fontTools.designspaceLib.DesignSpaceDocument.fromfile(
-        parsed_args.designspace_file
-    )
+    if parsed_args.stylespace:
+        stylespace = parsed_args.stylespace
+    else:
+        try:
+            stylespace = statmake.classes.Stylespace.from_designspace(designspace)
+        except ValueError as e:
+            logging.error("Could not load Stylespace data from Designspace: %s", str(e))
+            sys.exit(1)
     additional_locations = designspace.lib.get("org.statmake.additionalLocations", {})
 
     font = fontTools.ttLib.TTFont(parsed_args.variable_font)
     statmake.lib.apply_stylespace_to_variable_font(
         stylespace, font, additional_locations
     )
-    font.save(parsed_args.variable_font)
+    font.save(parsed_args.output_path or parsed_args.variable_font)
