@@ -9,7 +9,7 @@ repository = "https://github.com/daltonmaag/statmake"
 
 [tool.poetry.dependencies]
 attrs = ">= 18.2"
-cattrs = ">= 0.9"
+cattrs = {git = "https://github.com/Tinche/cattrs.git", branch = "bb48897a7f389332d6111a239dcf3bf4a11b526f"}
 fonttools = {version = ">= 3.38", extras = ["ufo"]}
 python = "^3.6"
 
