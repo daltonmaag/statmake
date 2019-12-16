@@ -46,12 +46,11 @@ before_deploy:
   # the web interface in the project settings.
   - pip install --upgrade pip
   - pip install poetry
-  - poetry config http-basic.pypi $PYPI_USER $PYPI_PASS
   - poetry build
 
 deploy:
   provider: script
-  script: poetry publish
+  script: poetry publish --username $PYPI_USER --password $PYPI_PASS
   skip_cleanup: true
   on:
     all_branches: true  # Travis recognizes tag names as "branches"
