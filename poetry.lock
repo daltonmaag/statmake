@@ -386,7 +386,7 @@ extras = ["ufo"]
 version = ">=4.2.0"
 
 [package.extras]
-pathops = ["skia-pathops (>=0.2.0)"]
+pathops = ["skia-pathops (>=0.2.1)"]
 
 [[package]]
 category = "dev"
