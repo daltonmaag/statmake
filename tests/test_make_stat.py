@@ -1,6 +1,5 @@
-import pytest
-
 import fontTools.designspaceLib
+import pytest
 
 import statmake.classes
 import statmake.lib
