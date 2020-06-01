@@ -1,7 +1,7 @@
 import fontTools.designspaceLib
+import fontTools.ttLib
 import pytest
 import ufo2ft
-import fontTools.ttLib
 
 import statmake.cli
 

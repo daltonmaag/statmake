@@ -1,0 +1,18 @@
+[MESSAGES CONTROL]
+
+disable=
+    all
+
+enable=
+    E,
+    F,
+    anomalous-backslash-in-string,
+    bad-format-string,
+    bad-open-mode
+    binary-op-exception,
+    duplicate-key,
+    global-variable-not-assigned,
+    unnecessary-semicolon,
+    unreachable,
+    unused-variable,
+    unused-import,
