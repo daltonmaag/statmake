@@ -124,7 +124,7 @@ def generate_name_and_STAT_variable(
         for location in axis.locations:
             if location.value not in axis_stops[axis.tag]:
                 continue
-            axis_value = otTables.AxisValue()
+            axis_value = otTables.AxisValue()  # pylint: disable=E1101
             name_id = name_table.addMultilingualName(location.name.mapping, mac=False)
             location.fill_in_AxisValue(
                 axis_value, axis_index=name_to_index[axis.name.default], name_id=name_id
@@ -138,7 +138,7 @@ def generate_name_and_STAT_variable(
             for k, v in named_location.axis_values.items()
         ):
             stat_table.table.Version = 0x00010002
-            axis_value = otTables.AxisValue()
+            axis_value = otTables.AxisValue()  # pylint: disable=E1101
             name_id = name_table.addMultilingualName(
                 named_location.name.mapping, mac=False
             )
@@ -146,7 +146,7 @@ def generate_name_and_STAT_variable(
                 axis_value,
                 axis_name_to_index=name_to_index,
                 name_id=name_id,
-                axis_value_record_type=otTables.AxisValueRecord,
+                axis_value_record_type=otTables.AxisValueRecord,  # pylint: disable=E1101
             )
             stat_table.table.AxisValueArray.AxisValue.append(axis_value)
 
@@ -165,11 +165,13 @@ def _default_name_string(otfont: fontTools.ttLib.TTFont, name_id: int) -> str:
 
 def _new_empty_STAT_table():
     stat_table = fontTools.ttLib.newTable("STAT")
-    stat_table.table = otTables.STAT()
+    stat_table.table = otTables.STAT()  # pylint: disable=E1101
     stat_table.table.Version = 0x00010001
-    stat_table.table.DesignAxisRecord = otTables.AxisRecordArray()
+    stat_table.table.DesignAxisRecord = (
+        otTables.AxisRecordArray()  # pylint: disable=E1101
+    )
     stat_table.table.DesignAxisRecord.Axis = []
-    stat_table.table.AxisValueArray = otTables.AxisValueArray()
+    stat_table.table.AxisValueArray = otTables.AxisValueArray()  # pylint: disable=E1101
     stat_table.table.AxisValueArray.AxisValue = []
     return stat_table
 
@@ -177,7 +179,7 @@ def _new_empty_STAT_table():
 def _new_axis_record(tag: str, name_id: int, ordering: Optional[int]):
     if ordering is None:
         raise ValueError("ordering must be an integer.")
-    axis_record = otTables.AxisRecord()
+    axis_record = otTables.AxisRecord()  # pylint: disable=E1101
     axis_record.AxisTag = tag
     axis_record.AxisNameID = name_id
     axis_record.AxisOrdering = ordering
