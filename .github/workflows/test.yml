@@ -18,7 +18,7 @@ jobs:
         python-version: '3.8'
     - name: Lint
       run: |
-        pip install tox
+        pip install poetry tox
         tox -e lint
 
   build:
@@ -36,5 +36,5 @@ jobs:
         python-version: ${{ matrix.python-version }}
     - name: Test with tox
       run: |
-        pip install tox
+        pip install poetry tox
         tox -e py-cov
