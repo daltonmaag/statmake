@@ -60,7 +60,9 @@ def dump_name_ids(otfont: fontTools.ttLib.TTFont, name_id: int) -> Mapping[str, 
     name_mapping = fontTools.ttLib.tables._n_a_m_e._WINDOWS_LANGUAGES
     name_table = otfont["name"].names
     matches = {
-        name_mapping[n.langID]: n.toUnicode() for n in name_table if n.nameID == name_id
+        name_mapping[n.langID]: n.toUnicode()
+        for n in name_table
+        if n.platformID == 3 and n.nameID == name_id
     }
     return matches
 
