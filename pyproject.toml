@@ -6,6 +6,7 @@ authors = ["Nikolaus Waxweiler <nikolaus.waxweiler@daltonmaag.com>"]
 license = "MIT"
 readme = "README.md"
 repository = "https://github.com/daltonmaag/statmake"
+include = ["py.typed"]
 
 [tool.poetry.dependencies]
 attrs = ">= 18.2"

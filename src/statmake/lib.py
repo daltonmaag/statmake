@@ -1,8 +1,8 @@
 import collections
-from typing import Any, Dict, Mapping, Set, Tuple, List
+from typing import Any, Dict, List, Mapping, Set, Tuple
 
-import fontTools.ttLib
 import fontTools.otlLib.builder
+import fontTools.ttLib
 
 import statmake.classes
 
