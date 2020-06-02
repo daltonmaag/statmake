@@ -35,7 +35,19 @@ def _generate_axes_and_locations_dict(
     additional_locations: Mapping[str, float],
 ) -> Tuple[List[Mapping[str, Any]], List[Mapping[str, Any]], int]:
     """Generate axes and locations dictionaries for use in
-    fontTools.otlLib.builder.buildStatTable, tailored to the font."""
+    fontTools.otlLib.builder.buildStatTable, tailored to the font.
+
+    Rules:
+        1. There must be a fvar table so we know which named instances are defined.
+            Every named instance needs a STAT entry for every point of its axis
+            definition, i.e. an instance at {"Weight": 300, "Slant": 5} must have a
+            Stylespace entry for Weight=300 and for Slant=5.
+        2. The Stylespace must contain all axis tags the varfont does.
+        3. TODO
+
+    XXX: Enforce that all namerecords must have the same language keys at Stylespace
+    instantiation time?
+    """
 
     if "fvar" not in varfont:
         raise ValueError(
@@ -46,9 +58,7 @@ def _generate_axes_and_locations_dict(
     stylespace_name_to_axis = {a.name.default: a for a in stylespace.axes}
     fvar_name_to_axis = {}
     name_to_tag: Dict[str, str] = {}
-    name_to_index: Dict[str, int] = {}
-    index = 0
-    for index, fvar_axis in enumerate(varfont["fvar"].axes):
+    for fvar_axis in varfont["fvar"].axes:
         fvar_axis_name = _default_name_string(varfont, fvar_axis.axisNameID)
         try:
             stylespace_axis = stylespace_name_to_axis[fvar_axis_name]
@@ -63,7 +73,6 @@ def _generate_axes_and_locations_dict(
             )
         fvar_name_to_axis[fvar_axis_name] = fvar_axis
         name_to_tag[fvar_axis_name] = fvar_axis.axisTag
-        name_to_index[fvar_axis_name] = index
 
     for axis_name in additional_locations:
         try:
@@ -71,8 +80,6 @@ def _generate_axes_and_locations_dict(
         except KeyError:
             raise ValueError(f"No stylespace entry found for axis name '{axis_name}'.")
         name_to_tag[stylespace_axis.name.default] = stylespace_axis.tag
-        index += 1
-        name_to_index[stylespace_axis.name.default] = index
 
     # First, determine which stops are used on which axes. The STAT table must contain
     # a name for each stop that is used on each axis, so each stop must have an entry
@@ -171,7 +178,7 @@ def _generate_axes_and_locations_dict(
 
 
 def _default_name_string(otfont: fontTools.ttLib.TTFont, name_id: int) -> str:
-    """Return English name for name_id."""
+    """Return (probably) English name for name_id."""
     name = otfont["name"].getDebugName(name_id)
     if name is not None:
         return name
