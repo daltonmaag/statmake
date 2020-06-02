@@ -1,6 +1,6 @@
 import io
 from pathlib import Path
-from typing import Mapping
+from typing import Mapping, Optional
 
 import fontTools.designspaceLib
 import fontTools.ttLib
@@ -67,7 +67,7 @@ def dump_name_ids(otfont: fontTools.ttLib.TTFont, name_id: int) -> Mapping[str, 
     return matches
 
 
-def empty_UFO(style_name: str):
+def empty_UFO(style_name: str) -> ufoLib2.Font:
     ufo = ufoLib2.Font()
     ufo.info.familyName = "Test"
     ufo.info.styleName = style_name
@@ -91,7 +91,9 @@ def reload_font(font):
 
 
 def generate_variable_font(
-    designspace_path: Path, stylespace_path: Path, additional_locations=None
+    designspace_path: Path,
+    stylespace_path: Path,
+    additional_locations: Optional[Mapping[str, float]] = None,
 ) -> fontTools.ttLib.TTFont:
     designspace = fontTools.designspaceLib.DesignSpaceDocument.fromfile(
         designspace_path

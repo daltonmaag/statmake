@@ -2,15 +2,19 @@ import argparse
 import logging
 import sys
 from pathlib import Path
+from typing import List, Optional
 
 import fontTools.designspaceLib
 import fontTools.ttLib
 
 import statmake.classes
 import statmake.lib
+from statmake.errors import Error, StylespaceError
 
 
-def main(args=None):
+def main(args: Optional[List[str]] = None) -> None:
+    logging.basicConfig(format="%(levelname)s: %(message)s")
+
     parser = argparse.ArgumentParser()
     parser.add_argument(
         "--stylespace",
@@ -43,13 +47,18 @@ def main(args=None):
     else:
         try:
             stylespace = statmake.classes.Stylespace.from_designspace(designspace)
-        except ValueError as e:
+        except StylespaceError as e:
             logging.error("Could not load Stylespace data from Designspace: %s", str(e))
             sys.exit(1)
     additional_locations = designspace.lib.get("org.statmake.additionalLocations", {})
 
     font = fontTools.ttLib.TTFont(parsed_args.variable_font)
-    statmake.lib.apply_stylespace_to_variable_font(
-        stylespace, font, additional_locations
-    )
+    try:
+        statmake.lib.apply_stylespace_to_variable_font(
+            stylespace, font, additional_locations
+        )
+    except Error as e:
+        logging.error("Cannot apply Stylespace to font: %s", str(e))
+        sys.exit(1)
+
     font.save(parsed_args.output_path or parsed_args.variable_font)

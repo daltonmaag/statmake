@@ -2,12 +2,14 @@ import enum
 import functools
 import os
 from pathlib import Path
-from typing import Any, List, Mapping, Optional, Tuple, Union
+from typing import Any, Dict, List, Mapping, Optional, Tuple, Union
 
 import attr
 import cattr
 import fontTools.designspaceLib
 import fontTools.misc.plistlib
+
+from .errors import StylespaceError
 
 DESIGNSPACE_STYLESPACE_INLINE_KEY = "org.statmake.stylespace"
 DESIGNSPACE_STYLESPACE_PATH_KEY = "org.statmake.stylespacePath"
@@ -40,28 +42,28 @@ class NameRecord:
 
     mapping: Mapping[str, str]
 
-    def __getitem__(self, key):
+    def __getitem__(self, key: str) -> str:
         return self.mapping.__getitem__(key)
 
     @property
-    def default(self):
+    def default(self) -> str:
         return self.mapping["en"]
 
     @classmethod
-    def from_string(cls, name: str):
+    def from_string(cls, name: str) -> "NameRecord":
         return cls(mapping={"en": name})
 
     @classmethod
-    def from_dict(cls, dictionary: Mapping):
+    def from_dict(cls, dictionary: Mapping) -> "NameRecord":
         return cls(mapping=dictionary)
 
     @classmethod
-    def structure(cls, data):
+    def structure(cls, data: Union[str, dict]) -> "NameRecord":
         if isinstance(data, str):
             return cls.from_string(data)
         if isinstance(data, dict):
             return cls.from_dict(data)
-        raise ValueError(f"Don't know how to construct NameRecord from '{data}'.")
+        raise StylespaceError(f"Don't know how to construct NameRecord from '{data}'.")
 
 
 @attr.s(auto_attribs=True, frozen=True, slots=True)
@@ -70,14 +72,12 @@ class LocationFormat1:
     value: float
     flags: FlagList = attr.ib(factory=FlagList)
 
-    def fill_in_AxisValue(self, axis_value: Any, axis_index: int, name_id: int):
-        """Fill in a supplied fontTools AxisValue object."""
-        axis_value.Format = 1
-        axis_value.AxisIndex = axis_index
-        axis_value.ValueNameID = name_id
-        axis_value.Value = self.value
-        axis_value.Flags = self.flags.value
-        return axis_value
+    def to_builder_dict(self) -> Dict[str, Any]:
+        return {
+            "name": self.name.mapping,
+            "value": self.value,
+            "flags": self.flags.value,
+        }
 
 
 @attr.s(auto_attribs=True, frozen=True, slots=True)
@@ -87,19 +87,18 @@ class LocationFormat2:
     range: Tuple[float, float]
     flags: FlagList = attr.ib(factory=FlagList)
 
-    def __attrs_post_init__(self):
+    def __attrs_post_init__(self) -> None:
         if len(self.range) != 2:
-            raise ValueError("Range must be a value pair of (min, max).")
+            raise StylespaceError("Range must be a value pair of (min, max).")
 
-    def fill_in_AxisValue(self, axis_value: Any, axis_index: int, name_id: int):
-        """Fill in a supplied fontTools AxisValue object."""
-        axis_value.Format = 2
-        axis_value.AxisIndex = axis_index
-        axis_value.ValueNameID = name_id
-        axis_value.NominalValue = self.value
-        axis_value.RangeMinValue, axis_value.RangeMaxValue = self.range
-        axis_value.Flags = self.flags.value
-        return axis_value
+    def to_builder_dict(self) -> Dict[str, Any]:
+        return {
+            "name": self.name.mapping,
+            "nominalValue": self.value,
+            "rangeMinValue": self.range[0],
+            "rangeMaxValue": self.range[1],
+            "flags": self.flags.value,
+        }
 
 
 @attr.s(auto_attribs=True, frozen=True, slots=True)
@@ -109,15 +108,13 @@ class LocationFormat3:
     linked_value: float
     flags: FlagList = attr.ib(factory=FlagList)
 
-    def fill_in_AxisValue(self, axis_value: Any, axis_index: int, name_id: int):
-        """Fill in a supplied fontTools AxisValue object."""
-        axis_value.Format = 3
-        axis_value.AxisIndex = axis_index
-        axis_value.ValueNameID = name_id
-        axis_value.Value = self.value
-        axis_value.LinkedValue = self.linked_value
-        axis_value.Flags = self.flags.value
-        return axis_value
+    def to_builder_dict(self) -> Dict[str, Any]:
+        return {
+            "name": self.name.mapping,
+            "value": self.value,
+            "linkedValue": self.linked_value,
+            "flags": self.flags.value,
+        }
 
 
 @attr.s(auto_attribs=True, frozen=True, slots=True)
@@ -126,24 +123,12 @@ class LocationFormat4:
     axis_values: Mapping[str, float]
     flags: FlagList = attr.ib(factory=FlagList)
 
-    def fill_in_AxisValue(
-        self,
-        axis_value: Any,
-        axis_name_to_index: Mapping[str, int],
-        name_id: int,
-        axis_value_record_type: Any,
-    ):
-        """Fill in a supplied fontTools AxisValue object."""
-        axis_value.Format = 4
-        axis_value.ValueNameID = name_id
-        axis_value.Flags = self.flags.value
-        axis_value.AxisValueRecord = []
-        for name, value in self.axis_values.items():
-            record = axis_value_record_type()
-            record.AxisIndex = axis_name_to_index[name]
-            record.Value = value
-            axis_value.AxisValueRecord.append(record)
-        return axis_value
+    def to_builder_dict(self, name_to_tag: Mapping[str, str]) -> Dict[str, Any]:
+        return {
+            "name": self.name.mapping,
+            "location": {name_to_tag[k]: v for k, v in self.axis_values.items()},
+            "flags": self.flags.value,
+        }
 
 
 @attr.s(auto_attribs=True, frozen=True, slots=True)
@@ -162,7 +147,7 @@ class Stylespace:
     locations: List[LocationFormat4] = attr.ib(factory=list)
     elided_fallback_name_id: int = 2
 
-    def __attrs_post_init__(self):
+    def __attrs_post_init__(self) -> None:
         """Fill in a default ordering unless the user specified at least one
         custom one.
 
@@ -174,13 +159,15 @@ class Stylespace:
         elif not all(
             isinstance(axis.ordering, int) and axis.ordering >= 0 for axis in self.axes
         ):
-            raise ValueError(
+            raise StylespaceError(
                 "If you specify the ordering for one axis, you must specify all of "
                 "them and they must be >= 0."
             )
 
+        # XXX: reject locations with axis names not in axes
+
     @classmethod
-    def from_dict(cls, dict_data: dict):
+    def from_dict(cls, dict_data: dict) -> "Stylespace":
         """Construct Stylespace from unstructured dict data."""
         converter = cattr.Converter()
         converter.register_structure_hook(
@@ -195,13 +182,13 @@ class Stylespace:
         return converter.structure(dict_data, cls)
 
     @classmethod
-    def from_bytes(cls, stylespace_content: bytes):
+    def from_bytes(cls, stylespace_content: bytes) -> "Stylespace":
         """Construct Stylespace from bytes containing (XML) plist data."""
         stylespace_content_parsed = fontTools.misc.plistlib.loads(stylespace_content)
         return cls.from_dict(stylespace_content_parsed)
 
     @classmethod
-    def from_file(cls, stylespace_path: os.PathLike):
+    def from_file(cls, stylespace_path: Union[str, bytes, os.PathLike]) -> "Stylespace":
         """Construct Stylespace from path to (XML) plist file."""
         with open(stylespace_path, "rb") as fp:
             return cls.from_bytes(fp.read())
@@ -209,7 +196,7 @@ class Stylespace:
     @classmethod
     def from_designspace(
         cls, designspace: fontTools.designspaceLib.DesignSpaceDocument
-    ):
+    ) -> "Stylespace":
         f"""Construct Stylespace from unstructured dict data or a path stored in a
         Designspace object's lib.
 
@@ -227,7 +214,7 @@ class Stylespace:
         if (stylespace_inline and stylespace_path) or (
             not stylespace_inline and not stylespace_path
         ):
-            raise ValueError(
+            raise StylespaceError(
                 "Designspace lib must contain EITHER inline Stylespace data OR a path "
                 "to an external Stylespace file."
             )
@@ -236,7 +223,7 @@ class Stylespace:
             return cls.from_dict(stylespace_inline)
 
         if not designspace.path:
-            raise ValueError(
+            raise StylespaceError(
                 "Designspace object must have `path` attribute set, because the "
                 "Stylespace path is relative to the Designspace file."
             )

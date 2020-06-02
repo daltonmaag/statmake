@@ -6,11 +6,12 @@ authors = ["Nikolaus Waxweiler <nikolaus.waxweiler@daltonmaag.com>"]
 license = "MIT"
 readme = "README.md"
 repository = "https://github.com/daltonmaag/statmake"
+include = ["py.typed"]
 
 [tool.poetry.dependencies]
 attrs = ">= 18.2"
 cattrs = "^1.0"
-fonttools = {version = "^4.0", extras = ["ufo"]}
+fonttools = {version = "^4.11", extras = ["ufo"]}
 python = "^3.6"
 
 [tool.poetry.dev-dependencies]

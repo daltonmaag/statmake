@@ -1,19 +1,21 @@
 import fontTools.designspaceLib
+import fontTools.otlLib.builder
 import pytest
 
 import statmake.classes
 import statmake.lib
+from statmake.errors import Error, StylespaceError
 
 from . import testutil
 
 
 def test_load_stylespace_broken_range(datadir):
-    with pytest.raises(ValueError, match=r"Range .*"):
+    with pytest.raises(StylespaceError, match=r"Range .*"):
         statmake.classes.Stylespace.from_file(datadir / "TestBroken.stylespace")
 
 
 def test_load_stylespace_broken_ordering(datadir):
-    with pytest.raises(ValueError, match=r".* ordering .*"):
+    with pytest.raises(StylespaceError, match=r".* ordering .*"):
         statmake.classes.Stylespace.from_file(datadir / "TestBrokenAxes.stylespace")
 
 
@@ -32,12 +34,12 @@ def test_load_from_broken_designspace(datadir):
     designspace = fontTools.designspaceLib.DesignSpaceDocument.fromfile(
         datadir / "TestNoFormat4.stylespace"
     )
-    with pytest.raises(ValueError, match=r".* lib .*"):
+    with pytest.raises(StylespaceError, match=r".* lib .*"):
         statmake.classes.Stylespace.from_designspace(designspace)
 
 
 def test_generation_incomplete_stylespace(datadir):
-    with pytest.raises(ValueError, match=r".* no Stylespace entry .*"):
+    with pytest.raises(Error, match=r".* no Stylespace entry .*"):
         _ = testutil.generate_variable_font(
             datadir / "Test_Wght_Italic.designspace",
             datadir / "TestIncomplete.stylespace",
@@ -46,12 +48,64 @@ def test_generation_incomplete_stylespace(datadir):
 
 def test_generation_incomplete_additional_location(datadir):
     with pytest.raises(
-        ValueError, match=r".* no Stylespace entry .* additional locations.*"
+        Error, match=r".* no Stylespace entry .* additional locations.*"
     ):
         _ = testutil.generate_variable_font(
             datadir / "Test_Wght_Italic.designspace",
             datadir / "Test.stylespace",
             {"Italic": 2},
+        )
+
+
+def test_generation_disjunct_additional_location(datadir):
+    with pytest.raises(Error, match=r".* the following aren't: Foo."):
+        _ = testutil.generate_variable_font(
+            datadir / "Test_Wght_Italic.designspace",
+            datadir / "Test.stylespace",
+            {"Foo": 2},
+        )
+
+
+def test_generation_superfluous_additional_location(datadir):
+    with pytest.raises(
+        Error, match=r"Rejecting the additional location for the axis named 'Italic'.*"
+    ):
+        _ = testutil.generate_variable_font(
+            datadir / "Test_WghtItal.designspace",
+            datadir / "Test.stylespace",
+            {"Italic": 1},
+        )
+
+
+def test_generation_unknown_font_axis(datadir):
+    with pytest.raises(
+        Error, match=r"Font contains axis named 'Italic' which is not in Stylespace.*"
+    ):
+        _ = testutil.generate_variable_font(
+            datadir / "Test_WghtItal.designspace",
+            datadir / "TestJustWght.stylespace",
+            {},
+        )
+
+
+def test_generation_wrong_tag(datadir):
+    with pytest.raises(
+        Error,
+        match=r"Font axis named 'Italic' has tag 'ital' but Stylespace .* 'slnt'.",
+    ):
+        _ = testutil.generate_variable_font(
+            datadir / "Test_WghtItal.designspace",
+            datadir / "TestItalIsSlnt.stylespace",
+            {},
+        )
+
+
+def test_generation_incomplete_location(datadir):
+    with pytest.raises(
+        Error, match=r"missing locations for the following axes: Italic.",
+    ):
+        _ = testutil.generate_variable_font(
+            datadir / "Test_Wght_Italic.designspace", datadir / "Test.stylespace", {},
         )
 
 
@@ -147,7 +201,9 @@ def test_generation_full(datadir):
             "Name": {"en": "fgfg"},
         },
     ]
-    assert stat_axis_values == stat_axis_values_expected
+    assert sorted(stat_axis_values, key=lambda x: x["Name"]["en"]) == sorted(
+        stat_axis_values_expected, key=lambda x: x["Name"]["en"]
+    )
 
     assert stat_table.table.ElidedFallbackNameID == 2
 
@@ -308,6 +364,8 @@ def test_generation_italic(datadir):
             "Name": {"en": "ASDF"},
         },
     ]
-    assert stat_axis_values == stat_axis_values_expected
+    assert sorted(stat_axis_values, key=lambda x: x["Name"]["en"]) == sorted(
+        stat_axis_values_expected, key=lambda x: x["Name"]["en"]
+    )
 
     assert stat_table.table.ElidedFallbackNameID == 2
