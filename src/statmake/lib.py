@@ -1,9 +1,8 @@
 import collections
-import copy
-from typing import Dict, Mapping, Optional, Set
+from typing import Any, Dict, Mapping, Set, Tuple, List
 
 import fontTools.ttLib
-import fontTools.ttLib.tables.otTables as otTables
+import fontTools.otlLib.builder
 
 import statmake.classes
 
@@ -12,7 +11,7 @@ def apply_stylespace_to_variable_font(
     stylespace: statmake.classes.Stylespace,
     varfont: fontTools.ttLib.TTFont,
     additional_locations: Mapping[str, float],
-):
+) -> None:
     """Generate and apply a STAT table to a variable font.
 
     additional_locations: used in subset Designspaces to express where on which other
@@ -21,19 +20,22 @@ def apply_stylespace_to_variable_font(
     family (either because they intentionally contain just a subset of axes or because
     the designs are incompatible).
     """
-    name_table, stat_table = generate_name_and_STAT_variable(
+
+    axes, locations, elided_fallback_name = _generate_axes_and_locations_dict(
         stylespace, varfont, additional_locations
     )
-    varfont["name"] = name_table
-    varfont["STAT"] = stat_table
+    fontTools.otlLib.builder.buildStatTable(
+        varfont, axes, locations, elided_fallback_name
+    )
 
 
-def generate_name_and_STAT_variable(
+def _generate_axes_and_locations_dict(
     stylespace: statmake.classes.Stylespace,
     varfont: fontTools.ttLib.TTFont,
     additional_locations: Mapping[str, float],
-):
-    """Generate a new name and STAT table ready for insertion."""
+) -> Tuple[List[Mapping[str, Any]], List[Mapping[str, Any]], int]:
+    """Generate axes and locations dictionaries for use in
+    fontTools.otlLib.builder.buildStatTable, tailored to the font."""
 
     if "fvar" not in varfont:
         raise ValueError(
@@ -101,58 +103,71 @@ def generate_name_and_STAT_variable(
             )
         axis_stops[axis_tag].add(v)
 
-    # Construct temporary name and STAT tables for returning at the end.
-    name_table = copy.deepcopy(varfont["name"])
-    stat_table = _new_empty_STAT_table()
-
-    # Generate axis records. Reuse an axis' name ID if it exists, else make a new one.
-    for axis_name, axis_tag in name_to_tag.items():
-        stylespace_axis = stylespace_name_to_axis[axis_name]
-        if axis_name in fvar_name_to_axis:
-            axis_name_id = fvar_name_to_axis[axis_name].axisNameID
-        else:
-            axis_name_id = name_table.addMultilingualName(
-                stylespace_axis.name.mapping, mac=False
-            )
-        axis_record = _new_axis_record(
-            tag=axis_tag, name_id=axis_name_id, ordering=stylespace_axis.ordering
-        )
-        stat_table.table.DesignAxisRecord.Axis.append(axis_record)
-
     # Generate formats 1, 2 and 3.
+    otlLib_axes: List[Mapping[str, Any]] = []
     for axis in stylespace.axes:
+        otlLib_axis_locations = []
         for location in axis.locations:
             if location.value not in axis_stops[axis.tag]:
                 continue
-            axis_value = otTables.AxisValue()  # pylint: disable=E1101
-            name_id = name_table.addMultilingualName(location.name.mapping, mac=False)
-            location.fill_in_AxisValue(
-                axis_value, axis_index=name_to_index[axis.name.default], name_id=name_id
-            )
-            stat_table.table.AxisValueArray.AxisValue.append(axis_value)
+
+            if isinstance(location, statmake.classes.LocationFormat1):
+                otlLib_axis_locations.append(
+                    {
+                        "name": location.name.mapping,
+                        "value": location.value,
+                        "flags": location.flags.value,
+                    }
+                )
+            elif isinstance(location, statmake.classes.LocationFormat2):
+                otlLib_axis_locations.append(
+                    {
+                        "name": location.name.mapping,
+                        "nominalValue": location.value,
+                        "rangeMinValue": location.range[0],
+                        "rangeMaxValue": location.range[1],
+                        "flags": location.flags.value,
+                    }
+                )
+            elif isinstance(location, statmake.classes.LocationFormat3):
+                otlLib_axis_locations.append(
+                    {
+                        "name": location.name.mapping,
+                        "value": location.value,
+                        "linkedValue": location.linked_value,
+                        "flags": location.flags.value,
+                    }
+                )
+            else:
+                raise ValueError("...")
+
+        otlLib_axes.append(
+            {
+                "tag": axis.tag,
+                "name": axis.name.mapping,
+                "ordering": axis.ordering,
+                "values": otlLib_axis_locations,
+            }
+        )
 
     # Generate format 4.
+    otlLib_locations: List[Mapping[str, Any]] = []
     for named_location in stylespace.locations:
         if all(
             name_to_tag[k] in axis_stops and v in axis_stops[name_to_tag[k]]
             for k, v in named_location.axis_values.items()
         ):
-            stat_table.table.Version = 0x00010002
-            axis_value = otTables.AxisValue()  # pylint: disable=E1101
-            name_id = name_table.addMultilingualName(
-                named_location.name.mapping, mac=False
+            otlLib_locations.append(
+                {
+                    "name": named_location.name.mapping,
+                    "location": {
+                        name_to_tag[k]: v for k, v in named_location.axis_values.items()
+                    },
+                    "flags": named_location.flags.value,
+                }
             )
-            named_location.fill_in_AxisValue(
-                axis_value,
-                axis_name_to_index=name_to_index,
-                name_id=name_id,
-                axis_value_record_type=otTables.AxisValueRecord,  # pylint: disable=E1101
-            )
-            stat_table.table.AxisValueArray.AxisValue.append(axis_value)
 
-    stat_table.table.ElidedFallbackNameID = stylespace.elided_fallback_name_id
-
-    return name_table, stat_table
+    return otlLib_axes, otlLib_locations, stylespace.elided_fallback_name_id
 
 
 def _default_name_string(otfont: fontTools.ttLib.TTFont, name_id: int) -> str:
@@ -161,26 +176,3 @@ def _default_name_string(otfont: fontTools.ttLib.TTFont, name_id: int) -> str:
     if name is not None:
         return name
     raise ValueError(f"No English record for id {name_id} for Windows platform.")
-
-
-def _new_empty_STAT_table():
-    stat_table = fontTools.ttLib.newTable("STAT")
-    stat_table.table = otTables.STAT()  # pylint: disable=E1101
-    stat_table.table.Version = 0x00010001
-    stat_table.table.DesignAxisRecord = (
-        otTables.AxisRecordArray()  # pylint: disable=E1101
-    )
-    stat_table.table.DesignAxisRecord.Axis = []
-    stat_table.table.AxisValueArray = otTables.AxisValueArray()  # pylint: disable=E1101
-    stat_table.table.AxisValueArray.AxisValue = []
-    return stat_table
-
-
-def _new_axis_record(tag: str, name_id: int, ordering: Optional[int]):
-    if ordering is None:
-        raise ValueError("ordering must be an integer.")
-    axis_record = otTables.AxisRecord()  # pylint: disable=E1101
-    axis_record.AxisTag = tag
-    axis_record.AxisNameID = name_id
-    axis_record.AxisOrdering = ordering
-    return axis_record

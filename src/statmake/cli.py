@@ -2,6 +2,7 @@ import argparse
 import logging
 import sys
 from pathlib import Path
+from typing import List, Optional
 
 import fontTools.designspaceLib
 import fontTools.ttLib
@@ -10,7 +11,7 @@ import statmake.classes
 import statmake.lib
 
 
-def main(args=None):
+def main(args: Optional[List[str]] = None) -> None:
     parser = argparse.ArgumentParser()
     parser.add_argument(
         "--stylespace",

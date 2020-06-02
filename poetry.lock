@@ -1,5 +1,5 @@
 [[package]]
-category = "dev"
+category = "main"
 description = "A small Python module for determining appropriate platform-specific dirs, e.g. a \"user data dir\"."
 name = "appdirs"
 optional = false
@@ -155,6 +155,11 @@ optional = false
 python-versions = ">=3.6"
 version = "4.11.0"
 
+[package.dependencies]
+[package.dependencies.fs]
+optional = true
+version = ">=2.2.0,<3"
+
 [package.extras]
 all = ["fs (>=2.2.0,<3)", "lxml (>=4.0,<5)", "zopfli (>=0.1.4)", "lz4 (>=1.7.4.2)", "matplotlib", "sympy", "brotli (>=1.0.1)", "scipy", "brotlipy (>=0.7.0)", "munkres", "unicodedata2 (>=13.0.0)", "xattr"]
 graphite = ["lz4 (>=1.7.4.2)"]
@@ -166,6 +171,23 @@ type1 = ["xattr"]
 ufo = ["fs (>=2.2.0,<3)"]
 unicode = ["unicodedata2 (>=13.0.0)"]
 woff = ["zopfli (>=0.1.4)", "brotli (>=1.0.1)", "brotlipy (>=0.7.0)"]
+
+[[package]]
+category = "main"
+description = "Python's filesystem abstraction layer"
+name = "fs"
+optional = false
+python-versions = "*"
+version = "2.4.11"
+
+[package.dependencies]
+appdirs = ">=1.4.3,<1.5.0"
+pytz = "*"
+setuptools = "*"
+six = ">=1.10,<2.0"
+
+[package.extras]
+scandir_ = ["scandir (>=1.5,<2.0)"]
 
 [[package]]
 category = "dev"
@@ -352,6 +374,14 @@ checkqa-mypy = ["mypy (v0.761)"]
 testing = ["argcomplete", "hypothesis (>=3.56)", "mock", "nose", "requests", "xmlschema"]
 
 [[package]]
+category = "main"
+description = "World timezone definitions, modern and historical"
+name = "pytz"
+optional = false
+python-versions = "*"
+version = "2020.1"
+
+[[package]]
 category = "dev"
 description = "Alternative regular expression module, to replace re."
 name = "regex"
@@ -360,7 +390,7 @@ python-versions = "*"
 version = "2020.5.14"
 
 [[package]]
-category = "dev"
+category = "main"
 description = "Python 2 and 3 compatibility utilities"
 name = "six"
 optional = false
@@ -435,11 +465,11 @@ lxml = ["lxml"]
 
 [[package]]
 category = "dev"
-description = "Measures number of Terminal column cells of wide-character codes"
+description = "Measures the displayed width of unicode strings in a terminal"
 name = "wcwidth"
 optional = false
 python-versions = "*"
-version = "0.1.9"
+version = "0.2.2"
 
 [[package]]
 category = "dev"
@@ -463,7 +493,7 @@ docs = ["sphinx", "jaraco.packaging (>=3.2)", "rst.linker (>=1.9)"]
 testing = ["jaraco.itertools", "func-timeout"]
 
 [metadata]
-content-hash = "a70e292e87b027f31e1a1c478bad64f9ee877b8ca371b423cc626d5227ce3dd0"
+content-hash = "354f644f3d6885828ebb741bff0f0a497e9ec8bcfb4817b8d06a6a5f8178d055"
 python-versions = "^3.6"
 
 [metadata.files]
@@ -579,6 +609,10 @@ cu2qu = [
 fonttools = [
     {file = "fonttools-4.11.0-py3-none-any.whl", hash = "sha256:0fa8e29b5f41045eb3d1f867bb78b139e07364dcd850ae5a7a6ecd0520c1cf82"},
     {file = "fonttools-4.11.0.zip", hash = "sha256:7fe5937206099ef284055b8c94798782e0993a740eed87f0dd262ed9870788aa"},
+]
+fs = [
+    {file = "fs-2.4.11-py2.py3-none-any.whl", hash = "sha256:cd6b178f373a0370feac8612fd3c142aa6a5cadd3d471b525b08db4d3b511c9c"},
+    {file = "fs-2.4.11.tar.gz", hash = "sha256:cc99d476b500f993df8ef697b96dc70928ca2946a455c396a566efe021126767"},
 ]
 importlib-metadata = [
     {file = "importlib_metadata-1.6.0-py2.py3-none-any.whl", hash = "sha256:2a688cbaa90e0cc587f1df48bdc97a6eadccdcd9c35fb3f976a09e3b5016d90f"},
@@ -697,6 +731,10 @@ pytest = [
     {file = "pytest-5.4.2-py3-none-any.whl", hash = "sha256:95c710d0a72d91c13fae35dce195633c929c3792f54125919847fdcdf7caa0d3"},
     {file = "pytest-5.4.2.tar.gz", hash = "sha256:eb2b5e935f6a019317e455b6da83dd8650ac9ffd2ee73a7b657a30873d67a698"},
 ]
+pytz = [
+    {file = "pytz-2020.1-py2.py3-none-any.whl", hash = "sha256:a494d53b6d39c3c6e44c3bec237336e14305e4f29bbf800b599253057fbb79ed"},
+    {file = "pytz-2020.1.tar.gz", hash = "sha256:c35965d010ce31b23eeb663ed3cc8c906275d6be1a34393a1d73a41febf4a048"},
+]
 regex = [
     {file = "regex-2020.5.14-cp27-cp27m-win32.whl", hash = "sha256:e565569fc28e3ba3e475ec344d87ed3cd8ba2d575335359749298a0899fe122e"},
     {file = "regex-2020.5.14-cp27-cp27m-win_amd64.whl", hash = "sha256:d466967ac8e45244b9dfe302bbe5e3337f8dc4dec8d7d10f5e950d83b140d33a"},
@@ -765,8 +803,8 @@ ufolib2 = [
     {file = "ufoLib2-0.7.1.zip", hash = "sha256:0387d3ecae3ffd56f57c81269ef4471981d430888467eaa13220d227bcf3291d"},
 ]
 wcwidth = [
-    {file = "wcwidth-0.1.9-py2.py3-none-any.whl", hash = "sha256:cafe2186b3c009a04067022ce1dcd79cb38d8d65ee4f4791b8888d6599d1bbe1"},
-    {file = "wcwidth-0.1.9.tar.gz", hash = "sha256:ee73862862a156bf77ff92b09034fc4825dd3af9cf81bc5b360668d425f3c5f1"},
+    {file = "wcwidth-0.2.2-py2.py3-none-any.whl", hash = "sha256:b651b6b081476420e4e9ae61239ac4c1b49d0c5ace42b2e81dc2ff49ed50c566"},
+    {file = "wcwidth-0.2.2.tar.gz", hash = "sha256:3de2e41158cb650b91f9654cbf9a3e053cee0719c9df4ddc11e4b568669e9829"},
 ]
 wrapt = [
     {file = "wrapt-1.12.1.tar.gz", hash = "sha256:b62ffa81fb85f4332a4f609cab4ac40709470da05643a082ec1eb88e6d9b97d7"},

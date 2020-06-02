@@ -1,4 +1,5 @@
 import fontTools.designspaceLib
+import fontTools.otlLib.builder
 import pytest
 
 import statmake.classes
@@ -147,7 +148,9 @@ def test_generation_full(datadir):
             "Name": {"en": "fgfg"},
         },
     ]
-    assert stat_axis_values == stat_axis_values_expected
+    assert sorted(stat_axis_values, key=lambda x: x["Name"]["en"]) == sorted(
+        stat_axis_values_expected, key=lambda x: x["Name"]["en"]
+    )
 
     assert stat_table.table.ElidedFallbackNameID == 2
 
@@ -308,6 +311,8 @@ def test_generation_italic(datadir):
             "Name": {"en": "ASDF"},
         },
     ]
-    assert stat_axis_values == stat_axis_values_expected
+    assert sorted(stat_axis_values, key=lambda x: x["Name"]["en"]) == sorted(
+        stat_axis_values_expected, key=lambda x: x["Name"]["en"]
+    )
 
     assert stat_table.table.ElidedFallbackNameID == 2
