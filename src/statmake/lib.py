@@ -5,6 +5,7 @@ import fontTools.otlLib.builder
 import fontTools.ttLib
 
 import statmake.classes
+from .errors import Error
 
 
 def apply_stylespace_to_variable_font(
@@ -69,7 +70,7 @@ def _generate_builder_data(
     for instance in varfont["fvar"].instances:
         for k, v in instance.coordinates.items():
             if v not in stylespace_stops[k]:
-                raise ValueError(
+                raise Error(
                     f"There is no Stylespace entry for stop {v} on the '{k}' axis."
                 )
             axis_stops[k].add(v)
@@ -77,7 +78,7 @@ def _generate_builder_data(
     for k, v in additional_locations.items():
         axis_tag = name_to_tag[k]
         if v not in stylespace_stops[axis_tag]:
-            raise ValueError(
+            raise Error(
                 f"There is no Stylespace entry for stop {v} on the '{k}' axis (from "
                 "additional locations)."
             )
@@ -120,7 +121,7 @@ def _sanity_check(
     """Ensures the input data contains no obvious faults."""
 
     if "fvar" not in varfont:
-        raise ValueError(
+        raise Error(
             "Need a variable font with the fvar table to determine which instances "
             "are present."
         )
@@ -131,7 +132,7 @@ def _sanity_check(
     additional_names_set = set(additional_locations.keys())
     if not additional_names_set.issubset(stylespace_names_set):
         surplus_keys = ", ".join(additional_names_set - stylespace_names_set)
-        raise ValueError(
+        raise Error(
             "Additional locations must only contain axis names that are present in "
             f"the Stylespace, the following aren't: {surplus_keys}."
         )
@@ -143,13 +144,13 @@ def _sanity_check(
     }
     for name, tag in font_name_to_tag.items():
         if name not in stylespace_name_to_tag:
-            raise ValueError(
+            raise Error(
                 f"Font contains axis named '{name}' which is not in Stylespace. The "
                 "Stylespace must contain all axes any font from the same family "
                 "contains."
             )
         if stylespace_name_to_tag[name] != tag:
-            raise ValueError(
+            raise Error(
                 f"Font axis named '{name}' has tag '{tag}' but Stylespace defines it "
                 f"to be {stylespace_name_to_tag[name]}. Axis names and tags must match "
                 "between the font and the Stylespace."
@@ -161,7 +162,7 @@ def _sanity_check(
     font_names_set = set(font_name_to_tag.keys()).union(additional_names_set)
     if font_names_set != stylespace_names_set:
         missing_axis_names = ", ".join(stylespace_names_set - font_names_set)
-        raise ValueError(
+        raise Error(
             "The location of the font is not fully specified, missing locations "
             f"for the following axes: {missing_axis_names}"
         )
@@ -175,5 +176,5 @@ def _default_name_string(otfont: fontTools.ttLib.TTFont, name_id: int) -> str:
     """Return English name for name_id."""
     name = otfont["name"].getName(name_id, 3, 1, 0x409)
     if name is None:
-        raise ValueError(f"No English record for id {name_id} for Windows platform.")
+        raise Error(f"No English record for id {name_id} for Windows platform.")
     return name.toStr()

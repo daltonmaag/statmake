@@ -9,9 +9,12 @@ import fontTools.ttLib
 
 import statmake.classes
 import statmake.lib
+from .errors import Error
 
 
 def main(args: Optional[List[str]] = None) -> None:
+    logging.basicConfig(format="%(levelname)s: %(message)s")
+
     parser = argparse.ArgumentParser()
     parser.add_argument(
         "--stylespace",
@@ -50,7 +53,12 @@ def main(args: Optional[List[str]] = None) -> None:
     additional_locations = designspace.lib.get("org.statmake.additionalLocations", {})
 
     font = fontTools.ttLib.TTFont(parsed_args.variable_font)
-    statmake.lib.apply_stylespace_to_variable_font(
-        stylespace, font, additional_locations
-    )
+    try:
+        statmake.lib.apply_stylespace_to_variable_font(
+            stylespace, font, additional_locations
+        )
+    except Error as e:
+        logging.error("Cannot apply Stylespace to font: %s", str(e))
+        sys.exit(1)
+
     font.save(parsed_args.output_path or parsed_args.variable_font)
