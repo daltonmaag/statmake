@@ -9,6 +9,8 @@ import cattr
 import fontTools.designspaceLib
 import fontTools.misc.plistlib
 
+from .errors import StylespaceError
+
 DESIGNSPACE_STYLESPACE_INLINE_KEY = "org.statmake.stylespace"
 DESIGNSPACE_STYLESPACE_PATH_KEY = "org.statmake.stylespacePath"
 
@@ -61,7 +63,7 @@ class NameRecord:
             return cls.from_string(data)
         if isinstance(data, dict):
             return cls.from_dict(data)
-        raise ValueError(f"Don't know how to construct NameRecord from '{data}'.")
+        raise StylespaceError(f"Don't know how to construct NameRecord from '{data}'.")
 
 
 @attr.s(auto_attribs=True, frozen=True, slots=True)
@@ -87,7 +89,7 @@ class LocationFormat2:
 
     def __attrs_post_init__(self) -> None:
         if len(self.range) != 2:
-            raise ValueError("Range must be a value pair of (min, max).")
+            raise StylespaceError("Range must be a value pair of (min, max).")
 
     def to_builder_dict(self) -> Dict[str, Any]:
         return {
@@ -157,7 +159,7 @@ class Stylespace:
         elif not all(
             isinstance(axis.ordering, int) and axis.ordering >= 0 for axis in self.axes
         ):
-            raise ValueError(
+            raise StylespaceError(
                 "If you specify the ordering for one axis, you must specify all of "
                 "them and they must be >= 0."
             )
@@ -210,7 +212,7 @@ class Stylespace:
         if (stylespace_inline and stylespace_path) or (
             not stylespace_inline and not stylespace_path
         ):
-            raise ValueError(
+            raise StylespaceError(
                 "Designspace lib must contain EITHER inline Stylespace data OR a path "
                 "to an external Stylespace file."
             )
@@ -219,7 +221,7 @@ class Stylespace:
             return cls.from_dict(stylespace_inline)
 
         if not designspace.path:
-            raise ValueError(
+            raise StylespaceError(
                 "Designspace object must have `path` attribute set, because the "
                 "Stylespace path is relative to the Designspace file."
             )

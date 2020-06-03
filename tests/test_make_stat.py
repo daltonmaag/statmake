@@ -4,17 +4,18 @@ import pytest
 
 import statmake.classes
 import statmake.lib
+from statmake.errors import Error, StylespaceError
 
 from . import testutil
 
 
 def test_load_stylespace_broken_range(datadir):
-    with pytest.raises(ValueError, match=r"Range .*"):
+    with pytest.raises(StylespaceError, match=r"Range .*"):
         statmake.classes.Stylespace.from_file(datadir / "TestBroken.stylespace")
 
 
 def test_load_stylespace_broken_ordering(datadir):
-    with pytest.raises(ValueError, match=r".* ordering .*"):
+    with pytest.raises(StylespaceError, match=r".* ordering .*"):
         statmake.classes.Stylespace.from_file(datadir / "TestBrokenAxes.stylespace")
 
 
@@ -33,12 +34,12 @@ def test_load_from_broken_designspace(datadir):
     designspace = fontTools.designspaceLib.DesignSpaceDocument.fromfile(
         datadir / "TestNoFormat4.stylespace"
     )
-    with pytest.raises(ValueError, match=r".* lib .*"):
+    with pytest.raises(StylespaceError, match=r".* lib .*"):
         statmake.classes.Stylespace.from_designspace(designspace)
 
 
 def test_generation_incomplete_stylespace(datadir):
-    with pytest.raises(ValueError, match=r".* no Stylespace entry .*"):
+    with pytest.raises(Error, match=r".* no Stylespace entry .*"):
         _ = testutil.generate_variable_font(
             datadir / "Test_Wght_Italic.designspace",
             datadir / "TestIncomplete.stylespace",
@@ -47,7 +48,7 @@ def test_generation_incomplete_stylespace(datadir):
 
 def test_generation_incomplete_additional_location(datadir):
     with pytest.raises(
-        ValueError, match=r".* no Stylespace entry .* additional locations.*"
+        Error, match=r".* no Stylespace entry .* additional locations.*"
     ):
         _ = testutil.generate_variable_font(
             datadir / "Test_Wght_Italic.designspace",

@@ -9,7 +9,7 @@ import fontTools.ttLib
 
 import statmake.classes
 import statmake.lib
-from .errors import Error
+from statmake.errors import Error, StylespaceError
 
 
 def main(args: Optional[List[str]] = None) -> None:
@@ -47,7 +47,7 @@ def main(args: Optional[List[str]] = None) -> None:
     else:
         try:
             stylespace = statmake.classes.Stylespace.from_designspace(designspace)
-        except ValueError as e:
+        except StylespaceError as e:
             logging.error("Could not load Stylespace data from Designspace: %s", str(e))
             sys.exit(1)
     additional_locations = designspace.lib.get("org.statmake.additionalLocations", {})

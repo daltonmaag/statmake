@@ -5,7 +5,7 @@ import fontTools.otlLib.builder
 import fontTools.ttLib
 
 import statmake.classes
-from .errors import Error
+from statmake.errors import Error
 
 
 def apply_stylespace_to_variable_font(
