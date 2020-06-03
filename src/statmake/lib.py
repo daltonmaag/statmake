@@ -164,7 +164,7 @@ def _sanity_check(
         missing_axis_names = ", ".join(stylespace_names_set - font_names_set)
         raise Error(
             "The location of the font is not fully specified, missing locations "
-            f"for the following axes: {missing_axis_names}"
+            f"for the following axes: {missing_axis_names}."
         )
 
 
