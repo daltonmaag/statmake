@@ -4,5 +4,5 @@ import pytest
 
 
 @pytest.fixture
-def datadir():
+def datadir() -> Path:
     return Path(__file__).parent / "data"

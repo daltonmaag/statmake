@@ -145,7 +145,7 @@ class Stylespace:
     locations: List[LocationFormat4] = attr.ib(factory=list)
     elided_fallback_name_id: int = 2
 
-    def __attrs_post_init__(self):
+    def __attrs_post_init__(self) -> None:
         """Fill in a default ordering unless the user specified at least one
         custom one.
 
