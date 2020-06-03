@@ -2,7 +2,7 @@ import enum
 import functools
 import os
 from pathlib import Path
-from typing import List, Mapping, Optional, Tuple, Union
+from typing import Any, Dict, List, Mapping, Optional, Tuple, Union
 
 import attr
 import cattr
@@ -70,6 +70,13 @@ class LocationFormat1:
     value: float
     flags: FlagList = attr.ib(factory=FlagList)
 
+    def to_builder_dict(self) -> Dict[str, Any]:
+        return {
+            "name": self.name.mapping,
+            "value": self.value,
+            "flags": self.flags.value,
+        }
+
 
 @attr.s(auto_attribs=True, frozen=True, slots=True)
 class LocationFormat2:
@@ -82,6 +89,15 @@ class LocationFormat2:
         if len(self.range) != 2:
             raise ValueError("Range must be a value pair of (min, max).")
 
+    def to_builder_dict(self) -> Dict[str, Any]:
+        return {
+            "name": self.name.mapping,
+            "nominalValue": self.value,
+            "rangeMinValue": self.range[0],
+            "rangeMaxValue": self.range[1],
+            "flags": self.flags.value,
+        }
+
 
 @attr.s(auto_attribs=True, frozen=True, slots=True)
 class LocationFormat3:
@@ -90,12 +106,27 @@ class LocationFormat3:
     linked_value: float
     flags: FlagList = attr.ib(factory=FlagList)
 
+    def to_builder_dict(self) -> Dict[str, Any]:
+        return {
+            "name": self.name.mapping,
+            "value": self.value,
+            "linkedValue": self.linked_value,
+            "flags": self.flags.value,
+        }
+
 
 @attr.s(auto_attribs=True, frozen=True, slots=True)
 class LocationFormat4:
     name: NameRecord
     axis_values: Mapping[str, float]
     flags: FlagList = attr.ib(factory=FlagList)
+
+    def to_builder_dict(self, name_to_tag: Mapping[str, str]) -> Dict[str, Any]:
+        return {
+            "name": self.name.mapping,
+            "location": {name_to_tag[k]: v for k, v in self.axis_values.items()},
+            "flags": self.flags.value,
+        }
 
 
 @attr.s(auto_attribs=True, frozen=True, slots=True)

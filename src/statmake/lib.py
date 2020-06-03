@@ -21,7 +21,7 @@ def apply_stylespace_to_variable_font(
     the designs are incompatible).
     """
 
-    axes, locations, elided_fallback_name = _generate_axes_and_locations_dict(
+    axes, locations, elided_fallback_name = _generate_builder_data(
         stylespace, varfont, additional_locations
     )
     fontTools.otlLib.builder.buildStatTable(
@@ -29,7 +29,7 @@ def apply_stylespace_to_variable_font(
     )
 
 
-def _generate_axes_and_locations_dict(
+def _generate_builder_data(
     stylespace: statmake.classes.Stylespace,
     varfont: fontTools.ttLib.TTFont,
     additional_locations: Mapping[str, float],
@@ -48,52 +48,11 @@ def _generate_axes_and_locations_dict(
 
     XXX: Enforce that all namerecords must have the same language keys at Stylespace
     instantiation time?
+    XXX ensure all namerecords have default "en" name we use to map names -> tags
     """
 
-    # XXX ensure all namerecords have default "en" name we use to map names -> tags
-    # XXX in varfont compare them to (name.platformID, name.langID) == (3, 0x409) nameID to map axis names -> axis tags
-
-    _sanity_check(stylespace, varfont, additional_locations)
-
-    # Match the plain English names for the axis in the Stylespace to the axis names
-    # in the font.
-    stylespace_name_to_axis = {a.name.default: a for a in stylespace.axes}
-    fvar_name_to_axis = {}
-    name_to_tag: Dict[str, str] = {}
-    for fvar_axis in varfont["fvar"].axes:
-        fvar_axis_name = _default_name_string(varfont, fvar_axis.axisNameID)
-        try:
-            stylespace_axis = stylespace_name_to_axis[fvar_axis_name]
-        except KeyError:
-            raise ValueError(
-                f"No stylespace entry found for axis name '{fvar_axis_name}'."
-            )
-        # Check that axes with the same name have the same tag.
-        if fvar_axis.axisTag != stylespace_axis.tag:
-            raise ValueError(
-                f"fvar axis '{fvar_axis_name}' tag is '{fvar_axis.axisTag}', but "
-                f"Stylespace tag is '{stylespace_axis.tag}'."
-            )
-        fvar_name_to_axis[fvar_axis_name] = fvar_axis
-        name_to_tag[fvar_axis_name] = fvar_axis.axisTag
-
-    for axis_name in additional_locations:
-        try:
-            stylespace_axis = stylespace_name_to_axis[axis_name]
-        except KeyError:
-            raise ValueError(f"No stylespace entry found for axis name '{axis_name}'.")
-        name_to_tag[stylespace_axis.name.default] = stylespace_axis.tag
-
-    # # Make sure that all tags present in the Stylespace are accounted for.
-    # font_axes = {axis.axisTag for axis in varfont["fvar"].axes}.union(
-    #     {name_to_tag[a] for a in additional_locations}
-    # )
-    # stylespace_axes = {a.tag for a in stylespace.axes}
-    # if stylespace_axes != font_axes:
-    #     missing_axes = ", ".join(stylespace_axes - font_axes)
-    #     raise ValueError(
-    #         f"Stylespace is missing definitions for axes with the tags: {missing_axes}."
-    #     )
+    name_to_tag = {a.name.default: a.tag for a in stylespace.axes}
+    _sanity_check(stylespace, varfont, additional_locations, name_to_tag)
 
     # First, determine which stops are used on which axes. The STAT table must contain
     # a name for each stop that is used on each axis, so each stop must have an entry
@@ -125,77 +84,41 @@ def _generate_axes_and_locations_dict(
         axis_stops[axis_tag].add(v)
 
     # Generate formats 1, 2 and 3.
-    otlLib_axes: List[Mapping[str, Any]] = []
-    for axis in stylespace.axes:
-        otlLib_axis_locations = []
-        for location in axis.locations:
-            if location.value not in axis_stops[axis.tag]:
-                continue
-
-            if isinstance(location, statmake.classes.LocationFormat1):
-                otlLib_axis_locations.append(
-                    {
-                        "name": location.name.mapping,
-                        "value": location.value,
-                        "flags": location.flags.value,
-                    }
-                )
-            elif isinstance(location, statmake.classes.LocationFormat2):
-                otlLib_axis_locations.append(
-                    {
-                        "name": location.name.mapping,
-                        "nominalValue": location.value,
-                        "rangeMinValue": location.range[0],
-                        "rangeMaxValue": location.range[1],
-                        "flags": location.flags.value,
-                    }
-                )
-            elif isinstance(location, statmake.classes.LocationFormat3):
-                otlLib_axis_locations.append(
-                    {
-                        "name": location.name.mapping,
-                        "value": location.value,
-                        "linkedValue": location.linked_value,
-                        "flags": location.flags.value,
-                    }
-                )
-            else:
-                raise ValueError("...")
-
-        otlLib_axes.append(
-            {
-                "tag": axis.tag,
-                "name": axis.name.mapping,
-                "ordering": axis.ordering,
-                "values": otlLib_axis_locations,
-            }
-        )
+    builder_axes: List[Mapping[str, Any]] = [
+        {
+            "tag": axis.tag,
+            "name": axis.name.mapping,
+            "ordering": axis.ordering,
+            "values": [
+                location.to_builder_dict()
+                for location in axis.locations
+                if location.value in axis_stops[axis.tag]
+            ],
+        }
+        for axis in stylespace.axes
+    ]
 
     # Generate format 4.
-    otlLib_locations: List[Mapping[str, Any]] = []
-    for named_location in stylespace.locations:
+    builder_locations: List[Mapping[str, Any]] = [
+        named_location.to_builder_dict(name_to_tag)
+        for named_location in stylespace.locations
         if all(
             name_to_tag[k] in axis_stops and v in axis_stops[name_to_tag[k]]
             for k, v in named_location.axis_values.items()
-        ):
-            otlLib_locations.append(
-                {
-                    "name": named_location.name.mapping,
-                    "location": {
-                        name_to_tag[k]: v for k, v in named_location.axis_values.items()
-                    },
-                    "flags": named_location.flags.value,
-                }
-            )
+        )
+    ]
 
-    return otlLib_axes, otlLib_locations, stylespace.elided_fallback_name_id
+    return builder_axes, builder_locations, stylespace.elided_fallback_name_id
 
 
 def _sanity_check(
     stylespace: statmake.classes.Stylespace,
     varfont: fontTools.ttLib.TTFont,
     additional_locations: Mapping[str, float],
+    stylespace_name_to_tag: Mapping[str, str],
 ) -> None:
+    """Ensures the input data contains no obvious faults."""
+
     if "fvar" not in varfont:
         raise ValueError(
             "Need a variable font with the fvar table to determine which instances "
@@ -204,7 +127,6 @@ def _sanity_check(
 
     # Sanity check: only allow axis names in additional_locations that are present in
     # the Stylespace.
-    stylespace_name_to_tag = {a.name.default: a.tag for a in stylespace.axes}
     stylespace_names_set = set(stylespace_name_to_tag.keys())
     additional_names_set = set(additional_locations.keys())
     if not additional_names_set.issubset(stylespace_names_set):
