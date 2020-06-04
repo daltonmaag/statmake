@@ -43,8 +43,11 @@ def _generate_builder_data(
             Every named instance needs a STAT entry for every point of its axis
             definition, i.e. an instance at {"Weight": 300, "Slant": 5} must have a
             Stylespace entry for Weight=300 and for Slant=5.
-        2. The Stylespace must contain all axis tags the varfont does.
-        3. All name IDs must have a default English (United States) entry for the
+        2. The Stylespace must contain all axis names the varfont does and tags must
+            match.
+        3. Additional locations must only specify axes not in the font already and can
+            only draw from axes available in the Stylespace.
+        4. All name IDs must have a default English (United States) entry for the
             Windows platform, Unicode BMP encoding, to match axis names to tags.
 
     XXX: Enforce that all namerecords must have the same language keys at Stylespace
@@ -154,6 +157,15 @@ def _sanity_check(
                 f"Font axis named '{name}' has tag '{tag}' but Stylespace defines it "
                 f"to be '{stylespace_name_to_tag[name]}'. Axis names and tags must "
                 "match between the font and the Stylespace."
+            )
+
+    # Sanity check: Only allow axis names in additional_locations that aren't in the
+    # font already.
+    for axis_name in additional_locations:
+        if axis_name in font_name_to_tag:
+            raise Error(
+                f"Rejecting the additional location for the axis named '{axis_name}' "
+                "because it is already present in the font."
             )
 
     # Sanity check: Ensure the location of the font is fully specified. This means

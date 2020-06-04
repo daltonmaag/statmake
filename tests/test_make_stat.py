@@ -66,6 +66,17 @@ def test_generation_disjunct_additional_location(datadir):
         )
 
 
+def test_generation_superfluous_additional_location(datadir):
+    with pytest.raises(
+        Error, match=r"Rejecting the additional location for the axis named 'Italic'.*"
+    ):
+        _ = testutil.generate_variable_font(
+            datadir / "Test_WghtItal.designspace",
+            datadir / "Test.stylespace",
+            {"Italic": 1},
+        )
+
+
 def test_generation_unknown_font_axis(datadir):
     with pytest.raises(
         Error, match=r"Font contains axis named 'Italic' which is not in Stylespace.*"
