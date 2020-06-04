@@ -1,0 +1,203 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+  <dict>
+    <!-- The top level `axes` key defines a list of axis definitions -->
+    <key>axes</key>
+    <array>
+
+      <!--
+        Each axis definition must have a `name` and the axis `tag` (duplicate
+        the information from the Designspace). `locations` is optional, if you
+        only use format 4 axis values, you don't need to define `locations` on
+        an axis.
+
+        Note that `name` can always be either a string or a dictionary of IETF
+        BCP 47 language codes to name strings. See "Regular" below for how this
+        looks like. If it is a string, it will be used to create a name table
+        entry with it for the language "en" or language ID 0x0409. If it is a
+        dictionary, it will automatically create appropriate multilingual name
+        table entries.
+
+        The `name` of an axis is a special case: You can define a dictionary
+        with name mappings, but it's only going to be used if the axis doesn't
+        already exist in the fvar table. Reason: you can use the `labelname`
+        element in the `axis` element in a Designspace to define multilingual
+        names. You can't when you don't define the axis, so you can do it in
+        the Stylespace instead.
+      -->
+      <dict>
+        <key>name</key>
+        <string>Weight</string>
+        <key>tag</key>
+        <string>wght</string>
+
+        <!--
+          `locations` are a list of dictionaries describing stops on the axis. Each
+          dictionary models one of format 1, 2 and 3 of the STAT axis values.
+        -->
+        <key>locations</key>
+        <array>
+          <!--
+            Format 1 must have at least `name` and `value`. `flags` is optional, see
+            below.
+
+            IMPORTANT: The `value` always means value in user space like in the
+            fvar table!
+          -->
+          <dict>
+            <key>name</key>
+            <string>XLight</string>
+            <key>value</key>
+            <integer>200</integer>
+          </dict>
+
+          <dict>
+            <key>name</key>
+            <string>Light</string>
+            <key>value</key>
+            <integer>300</integer>
+          </dict>
+
+          <!--
+            Format 3 must have at least `name`, `value` and `linked_value`. `flags` is
+            optional.
+          -->
+          <dict>
+            <!-- This is an example of how to define multilingual names. -->
+            <key>name</key>
+            <dict>
+              <key>en</key>
+              <string>Regular</string>
+              <key>de</key>
+              <string>Regulär</string>
+            </dict>
+            <key>value</key>
+            <integer>400</integer>
+            <key>linked_value</key>
+            <integer>700</integer>
+            <!--
+              Flags is a list and can contain the strings "ElidableAxisValueName",
+              "OlderSiblingFontAttribute" or both.
+            -->
+            <key>flags</key>
+            <array>
+              <string>ElidableAxisValueName</string>
+            </array>
+          </dict>
+
+          <dict>
+            <key>name</key>
+            <string>Semi Bold</string>
+            <key>value</key>
+            <integer>600</integer>
+          </dict>
+
+          <dict>
+            <key>name</key>
+            <dict>
+              <key>en</key>
+              <string>Bold</string>
+            </dict>
+            <key>value</key>
+            <integer>700</integer>
+          </dict>
+
+          <!--
+            Format 2 must have at least `name`, `value` and `range` with (min,
+            max) values. `flags` is optional.
+          -->
+          <dict>
+            <key>name</key>
+            <string>Black</string>
+            <key>value</key>
+            <integer>900</integer>
+            <key>range</key>
+            <array>
+              <integer>701</integer>
+              <integer>900</integer>
+            </array>
+          </dict>
+
+        </array>
+      </dict>
+
+      <dict>
+        <key>name</key>
+        <string>Italic</string>
+        <key>tag</key>
+        <string>slnt</string>
+        <key>locations</key>
+        <array>
+
+          <dict>
+            <key>name</key>
+            <string>Upright</string>
+            <key>value</key>
+            <integer>0</integer>
+            <key>linked_value</key>
+            <integer>1</integer>
+            <key>flags</key>
+            <array>
+              <string>ElidableAxisValueName</string>
+            </array>
+          </dict>
+
+          <dict>
+            <key>name</key>
+            <string>Italic</string>
+            <key>value</key>
+            <integer>1</integer>
+          </dict>
+
+        </array>
+      </dict>
+    </array>
+
+    <!--
+      The top-level `locations` key is a list of format 4 axis values. It is
+      optional and can be left out from the Stylespace if you don't need format
+      4 axis values.
+
+      ATTENTION: Using format 4 axis values bumps the STAT table version from 1.1 to
+      1.2. At the time of this writing (February 2019), version 1.2 is not supported by
+      Windows.
+    -->
+    <key>locations</key>
+    <array>
+
+      <!--
+        A format 4 dictionary must contain `name` and `axis_values`, the latter
+        is a dictionary of axis names to values. `flags` are optional.
+      -->
+      <dict>
+        <key>name</key>
+        <string>ASDF</string>
+        <key>axis_values</key>
+        <dict>
+          <key>Weight</key>
+          <integer>333</integer>
+          <key>Italic</key>
+          <integer>1</integer>
+        </dict>
+      </dict>
+
+      <dict>
+        <key>name</key>
+        <string>fgfg</string>
+        <key>axis_values</key>
+        <dict>
+          <key>Weight</key>
+          <integer>650</integer>
+          <key>Italic</key>
+          <real>0.5</real>
+        </dict>
+        <key>flags</key>
+        <array>
+          <string>ElidableAxisValueName</string>
+        </array>
+      </dict>
+
+    </array>
+  </dict>
+</plist>

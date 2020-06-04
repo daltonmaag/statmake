@@ -57,6 +57,47 @@ def test_generation_incomplete_additional_location(datadir):
         )
 
 
+def test_generation_disjunct_additional_location(datadir):
+    with pytest.raises(Error, match=r".* the following aren't: Foo."):
+        _ = testutil.generate_variable_font(
+            datadir / "Test_Wght_Italic.designspace",
+            datadir / "Test.stylespace",
+            {"Foo": 2},
+        )
+
+
+def test_generation_unknown_font_axis(datadir):
+    with pytest.raises(
+        Error, match=r"Font contains axis named 'Italic' which is not in Stylespace.*"
+    ):
+        _ = testutil.generate_variable_font(
+            datadir / "Test_WghtItal.designspace",
+            datadir / "TestJustWght.stylespace",
+            {},
+        )
+
+
+def test_generation_wrong_tag(datadir):
+    with pytest.raises(
+        Error,
+        match=r"Font axis named 'Italic' has tag 'ital' but Stylespace .* 'slnt'.",
+    ):
+        _ = testutil.generate_variable_font(
+            datadir / "Test_WghtItal.designspace",
+            datadir / "TestItalIsSlnt.stylespace",
+            {},
+        )
+
+
+def test_generation_incomplete_location(datadir):
+    with pytest.raises(
+        Error, match=r"missing locations for the following axes: Italic.",
+    ):
+        _ = testutil.generate_variable_font(
+            datadir / "Test_Wght_Italic.designspace", datadir / "Test.stylespace", {},
+        )
+
+
 def test_generation_full(datadir):
     varfont = testutil.generate_variable_font(
         datadir / "Test_WghtItal.designspace", datadir / "Test.stylespace"

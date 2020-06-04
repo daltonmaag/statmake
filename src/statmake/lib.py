@@ -152,8 +152,8 @@ def _sanity_check(
         if stylespace_name_to_tag[name] != tag:
             raise Error(
                 f"Font axis named '{name}' has tag '{tag}' but Stylespace defines it "
-                f"to be {stylespace_name_to_tag[name]}. Axis names and tags must match "
-                "between the font and the Stylespace."
+                f"to be '{stylespace_name_to_tag[name]}'. Axis names and tags must "
+                "match between the font and the Stylespace."
             )
 
     # Sanity check: Ensure the location of the font is fully specified. This means
@@ -166,10 +166,6 @@ def _sanity_check(
             "The location of the font is not fully specified, missing locations "
             f"for the following axes: {missing_axis_names}."
         )
-
-
-def _font_axis_tags(font: fontTools.ttLib.TTFont) -> Set[str]:
-    return {axis.axisTag for axis in font["fvar"].axes}
 
 
 def _default_name_string(otfont: fontTools.ttLib.TTFont, name_id: int) -> str:
