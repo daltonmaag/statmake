@@ -49,6 +49,7 @@ def _generate_builder_data(
             only draw from axes available in the Stylespace.
         4. All name IDs must have a default English (United States) entry for the
             Windows platform, Unicode BMP encoding, to match axis names to tags.
+        5. The font must get a location for every axis the Stylespace contains.
 
     XXX: Enforce that all namerecords must have the same language keys at Stylespace
     instantiation time?

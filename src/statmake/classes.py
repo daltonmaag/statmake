@@ -164,6 +164,8 @@ class Stylespace:
                 "them and they must be >= 0."
             )
 
+        # XXX: reject locations with axis names not in axes
+
     @classmethod
     def from_dict(cls, dict_data: dict) -> "Stylespace":
         """Construct Stylespace from unstructured dict data."""
