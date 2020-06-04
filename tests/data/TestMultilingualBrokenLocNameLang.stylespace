@@ -1,0 +1,71 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+  <dict>
+    <key>axes</key>
+    <array>
+
+      <dict>
+        <key>name</key>
+        <dict>
+          <key>en</key>
+          <string>Weight</string>
+          <key>de</key>
+          <string>Gäwicht</string>
+        </dict>
+        <key>tag</key>
+        <string>wght</string>
+
+        <key>locations</key>
+        <array>
+
+        </array>
+      </dict>
+
+      <dict>
+        <key>name</key>
+        <dict>
+          <key>en</key>
+          <string>Italic</string>
+          <key>de</key>
+          <string>Italienisch</string>
+        </dict>
+        <key>tag</key>
+        <string>ital</string>
+        <key>locations</key>
+        <array>
+
+          <dict>
+            <key>name</key>
+            <dict>
+              <key>en</key>
+              <string>Upright</string>
+              <key>de</key>
+              <string>Aufrecht</string>
+            </dict>
+            <key>value</key>
+            <integer>0</integer>
+            <key>linked_value</key>
+            <integer>1</integer>
+            <key>flags</key>
+            <array>
+              <string>ElidableAxisValueName</string>
+            </array>
+          </dict>
+
+          <dict>
+            <key>name</key>
+            <dict>
+              <key>en</key>
+              <string>Italic</string>
+            </dict>
+            <key>value</key>
+            <integer>1</integer>
+          </dict>
+
+        </array>
+      </dict>
+    </array>
+
+  </dict>
+</plist>

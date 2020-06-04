@@ -86,12 +86,7 @@
               </dict>
               <dict>
                 <key>name</key>
-                <dict>
-                  <key>en</key>
-                  <string>Regular</string>
-                  <key>de</key>
-                  <string>Regulär</string>
-                </dict>
+                <string>Regular</string>
                 <key>value</key>
                 <integer>400</integer>
                 <key>linked_value</key>

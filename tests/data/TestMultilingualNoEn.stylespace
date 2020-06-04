@@ -7,18 +7,15 @@
 
       <dict>
         <key>name</key>
-        <string>Weight</string>
+        <dict>
+          <key>de</key>
+          <string>Gäwicht</string>
+        </dict>
         <key>tag</key>
         <string>wght</string>
 
         <key>locations</key>
         <array>
-          <dict>
-            <key>name</key>
-            <string>XLight</string>
-            <key>value</key>
-            <integer>200</integer>
-          </dict>
 
           <dict>
             <key>name</key>
@@ -29,7 +26,12 @@
 
           <dict>
             <key>name</key>
-            <string>Regular</string>
+            <dict>
+              <key>en</key>
+              <string>Regular</string>
+              <key>de</key>
+              <string>Regulär</string>
+            </dict>
             <key>value</key>
             <integer>400</integer>
             <key>linked_value</key>
@@ -42,31 +44,14 @@
 
           <dict>
             <key>name</key>
-            <string>Semi Bold</string>
-            <key>value</key>
-            <integer>600</integer>
-          </dict>
-
-          <dict>
-            <key>name</key>
             <dict>
               <key>en</key>
               <string>Bold</string>
+              <key>fr</key>
+              <string>Bôld</string>
             </dict>
             <key>value</key>
             <integer>700</integer>
-          </dict>
-
-          <dict>
-            <key>name</key>
-            <string>Black</string>
-            <key>value</key>
-            <integer>900</integer>
-            <key>range</key>
-            <array>
-              <integer>701</integer>
-              <integer>900</integer>
-            </array>
           </dict>
 
         </array>
@@ -74,7 +59,12 @@
 
       <dict>
         <key>name</key>
-        <string>Italic</string>
+        <dict>
+          <key>en</key>
+          <string>Italic</string>
+          <key>de</key>
+          <string>Italienisch</string>
+        </dict>
         <key>tag</key>
         <string>ital</string>
         <key>locations</key>
@@ -82,7 +72,12 @@
 
           <dict>
             <key>name</key>
-            <string>Upright</string>
+            <dict>
+              <key>en</key>
+              <string>Upright</string>
+              <key>de</key>
+              <string>Aufrecht</string>
+            </dict>
             <key>value</key>
             <integer>0</integer>
             <key>linked_value</key>
@@ -95,7 +90,12 @@
 
           <dict>
             <key>name</key>
-            <string>Italic</string>
+            <dict>
+              <key>en</key>
+              <string>Italic</string>
+              <key>de</key>
+              <string>Italienisch</string>
+            </dict>
             <key>value</key>
             <integer>1</integer>
           </dict>
@@ -104,20 +104,5 @@
       </dict>
     </array>
 
-    <key>locations</key>
-    <array>
-      <dict>
-        <key>name</key>
-        <string>ASDF</string>
-        <key>axis_values</key>
-        <dict>
-          <key>Weight</key>
-          <integer>333</integer>
-          <key>Fooooo</key>
-          <integer>333</integer>
-        </dict>
-      </dict>
-
-    </array>
   </dict>
 </plist>

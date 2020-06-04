@@ -33,6 +33,31 @@ def test_load_stylespace_broken_format4_2(datadir):
         statmake.classes.Stylespace.from_file(datadir / "TestBogusFormat4_2.stylespace")
 
 
+def test_load_stylespace_broken_multilingual_no_en(datadir):
+    with pytest.raises(StylespaceError, match=r".* must have a default English .*"):
+        statmake.classes.Stylespace.from_file(
+            datadir / "TestMultilingualNoEn.stylespace"
+        )
+
+
+def test_load_stylespace_broken_multilingual_incomplete_lang(datadir):
+    with pytest.raises(
+        StylespaceError, match=r".* languages \['en'\] but expected was \['de', 'en'\]."
+    ):
+        statmake.classes.Stylespace.from_file(
+            datadir / "TestMultilingualBrokenAxisNameLang.stylespace"
+        )
+
+
+def test_load_stylespace_broken_multilingual_incomplete_lang2(datadir):
+    with pytest.raises(
+        StylespaceError, match=r".* languages \['en'\] but expected was \['de', 'en'\]."
+    ):
+        statmake.classes.Stylespace.from_file(
+            datadir / "TestMultilingualBrokenLocNameLang.stylespace"
+        )
+
+
 def test_load_stylespace_no_format4(datadir):
     statmake.classes.Stylespace.from_file(datadir / "TestNoFormat4.stylespace")
 
@@ -161,7 +186,7 @@ def test_generation_full(datadir):
             "Flags": 2,
             "Format": 3,
             "LinkedValue": 700.0,
-            "Name": {"de": "Regulär", "en": "Regular"},
+            "Name": {"en": "Regular"},
             "Value": 400.0,
         },
         {
@@ -260,7 +285,7 @@ def test_generation_upright(datadir):
             "Flags": 2,
             "Format": 3,
             "LinkedValue": 700.0,
-            "Name": {"de": "Regulär", "en": "Regular"},
+            "Name": {"en": "Regular"},
             "Value": 400.0,
         },
         {
@@ -338,7 +363,7 @@ def test_generation_italic(datadir):
             "Flags": 2,
             "Format": 3,
             "LinkedValue": 700.0,
-            "Name": {"de": "Regulär", "en": "Regular"},
+            "Name": {"en": "Regular"},
             "Value": 400.0,
         },
         {
