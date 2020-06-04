@@ -19,6 +19,20 @@ def test_load_stylespace_broken_ordering(datadir):
         statmake.classes.Stylespace.from_file(datadir / "TestBrokenAxes.stylespace")
 
 
+def test_load_stylespace_broken_format4_1(datadir):
+    with pytest.raises(
+        StylespaceError, match=r".* must specify values for all axes .*"
+    ):
+        statmake.classes.Stylespace.from_file(datadir / "TestBogusFormat4.stylespace")
+
+
+def test_load_stylespace_broken_format4_2(datadir):
+    with pytest.raises(
+        StylespaceError, match=r".* must specify values for all axes .*"
+    ):
+        statmake.classes.Stylespace.from_file(datadir / "TestBogusFormat4_2.stylespace")
+
+
 def test_load_stylespace_no_format4(datadir):
     statmake.classes.Stylespace.from_file(datadir / "TestNoFormat4.stylespace")
 
