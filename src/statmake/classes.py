@@ -149,7 +149,7 @@ class Stylespace:
 
     def __attrs_post_init__(self) -> None:
         """Fill in a default ordering unless the user specified at least one
-        custom one.
+        custom one, also do sanity checking.
 
         This works around the frozen state with `object.__setattr__`.
         """
@@ -164,7 +164,16 @@ class Stylespace:
                 "them and they must be >= 0."
             )
 
-        # XXX: reject locations with axis names not in axes
+        # Ensure named locations only contain axis names that are present in the
+        # Stylespace and specify a location for all axes.
+        available_axes = {a.name.default for a in self.axes}
+        for named_location in self.locations:
+            named_location_axes = set(named_location.axis_values.keys())
+            if named_location_axes != available_axes:
+                raise StylespaceError(
+                    f"Location named '{named_location.name}' must specify values for "
+                    "all axes in the Stylespace and contain no other axis names."
+                )
 
     @classmethod
     def from_dict(cls, dict_data: dict) -> "Stylespace":
