@@ -42,6 +42,13 @@ class NameRecord:
 
     mapping: Mapping[str, str]
 
+    def __attrs_post_init__(self) -> None:
+        if "en" not in self.mapping:
+            raise StylespaceError(
+                "All NameRecords must have a default English (IETF BCP 47 language "
+                "code 'en') entry."
+            )
+
     def __getitem__(self, key: str) -> str:
         return self.mapping.__getitem__(key)
 
@@ -173,6 +180,31 @@ class Stylespace:
                 raise StylespaceError(
                     f"Location named '{named_location.name}' must specify values for "
                     "all axes in the Stylespace and contain no other axis names."
+                )
+
+        # Ensure that all name records have the same languages specified.
+        reference_languages = None
+        for axis in self.axes:
+            if reference_languages is None:
+                reference_languages = sorted(axis.name.mapping.keys())
+            for location in axis.locations:
+                location_languages = sorted(location.name.mapping.keys())
+                if location_languages != reference_languages:
+                    raise StylespaceError(
+                        "All names must be supplied in the same languages. On axis "
+                        f"'{axis.name.default}', location '{location.name.default}' is "
+                        f"named in languages {location_languages} but "
+                        f"expected was {reference_languages}."
+                    )
+        for named_location in self.locations:
+            assert reference_languages is not None
+            location_languages = sorted(named_location.name.mapping.keys())
+            if location_languages != reference_languages:
+                raise StylespaceError(
+                    "All names must be supplied in the same languages. The named "
+                    f"location '{named_location.name.default}' is "
+                    f"named in languages {location_languages} but "
+                    f"expected was {reference_languages}."
                 )
 
     @classmethod

@@ -88,7 +88,7 @@ TEST_WGHT_UPRIGHT_STAT_DUMP = [
     {"Format": 1, "Name": {"en": "Light"}, "Flags": 0, "AxisIndex": 0, "Value": 300.0},
     {
         "Format": 3,
-        "Name": {"de": "Regulär", "en": "Regular"},
+        "Name": {"en": "Regular"},
         "Flags": 2,
         "AxisIndex": 0,
         "Value": 400.0,
