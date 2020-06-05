@@ -33,6 +33,16 @@ def test_load_stylespace_broken_format4_2(datadir):
         statmake.classes.Stylespace.from_file(datadir / "TestBogusFormat4_2.stylespace")
 
 
+def test_load_stylespace_missing_linked_value(datadir):
+    with pytest.raises(
+        StylespaceError,
+        match=r".* location 'Regular' specifies a linked_value of '100.0'.*",
+    ):
+        statmake.classes.Stylespace.from_file(
+            datadir / "TestMissingLinkedValue.stylespace"
+        )
+
+
 def test_load_stylespace_broken_multilingual_no_en(datadir):
     with pytest.raises(StylespaceError, match=r".* must have a default English .*"):
         statmake.classes.Stylespace.from_file(
