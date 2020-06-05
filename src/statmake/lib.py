@@ -50,10 +50,6 @@ def _generate_builder_data(
         4. All name IDs must have a default English (United States) entry for the
             Windows platform, Unicode BMP encoding, to match axis names to tags.
         5. The font must get a location for every axis the Stylespace contains.
-
-    XXX: Enforce that all namerecords must have the same language keys at Stylespace
-    instantiation time?
-    XXX ensure all namerecords have default "en" name we use to map names -> tags
     """
 
     name_to_tag = {a.name.default: a.tag for a in stylespace.axes}
