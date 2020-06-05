@@ -40,3 +40,7 @@ If you are producing a single variable font containing an entire family, this ap
 ## Q: Can I please have something other than a .plist file?
 
 Yes, but you have to convert it to `.plist` yourself, as statmake currently only read `.plist` files. One possible converter is Adam Twardoch's [yaplon](https://pypi.org/project/yaplon/).
+
+## Q: I'm getting errors about how statmake doesn't like the way I wrote the Stylespace, but I want the data to be that way?
+
+Use a custom script with the https://fonttools.readthedocs.io/en/latest/otlLib/builder.html#fontTools.otlLib.builder.buildStatTable API instead.
