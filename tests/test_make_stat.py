@@ -43,6 +43,23 @@ def test_load_stylespace_missing_linked_value(datadir):
         )
 
 
+def test_load_stylespace_duplicate_value(datadir):
+    with pytest.raises(
+        StylespaceError,
+        match=r".* 'Regular' specifies a duplicate location value of '400.0'.*",
+    ):
+        statmake.classes.Stylespace.from_file(datadir / "TestDuplicateValue.stylespace")
+
+
+def test_load_stylespace_duplicate_value_format4(datadir):
+    with pytest.raises(
+        StylespaceError, match=r".* location 'fgfg' specifies a duplicate location .*",
+    ):
+        statmake.classes.Stylespace.from_file(
+            datadir / "TestDuplicateValueFormat4.stylespace"
+        )
+
+
 def test_load_stylespace_broken_multilingual_no_en(datadir):
     with pytest.raises(StylespaceError, match=r".* must have a default English .*"):
         statmake.classes.Stylespace.from_file(
