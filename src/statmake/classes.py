@@ -2,7 +2,7 @@ import enum
 import functools
 import os
 from pathlib import Path
-from typing import Any, Dict, List, Mapping, Optional, Tuple, Union
+from typing import Any, Dict, List, Mapping, Optional, Set, Tuple, Union
 
 import attr
 import cattr
@@ -178,8 +178,9 @@ class Stylespace:
             named_location_axes = set(named_location.axis_values.keys())
             if named_location_axes != available_axes:
                 raise StylespaceError(
-                    f"Location named '{named_location.name}' must specify values for "
-                    "all axes in the Stylespace and contain no other axis names."
+                    f"Location named '{named_location.name.default}' must specify "
+                    "values for all axes in the Stylespace and contain no other axis "
+                    "names."
                 )
 
         # Ensure that all name records have the same languages specified.
@@ -219,6 +220,28 @@ class Stylespace:
                         f"'{linked_value}', which does not exist on that axis "
                         "(ranges are ignored)."
                     )
+
+        # Ensure location values are unique.
+        for axis in self.axes:
+            values = set()
+            for location in axis.locations:
+                if location.value in values:
+                    raise StylespaceError(
+                        f"On axis '{axis.name.default}', location "
+                        f"'{location.name.default}' specifies a duplicate location "
+                        f"value of '{location.value}', which is already assigned on "
+                        "the same axis."
+                    )
+                values.add(location.value)
+        named_values: Set[Tuple[Tuple[str, float], ...]] = set()
+        for named_location in self.locations:
+            named_location_tuple = tuple(named_location.axis_values.items())
+            if named_location_tuple in named_values:
+                raise StylespaceError(
+                    f"The named location '{named_location.name.default}' specifies a "
+                    "duplicate location already taken by another."
+                )
+            named_values.add(named_location_tuple)
 
     @classmethod
     def from_dict(cls, dict_data: dict) -> "Stylespace":

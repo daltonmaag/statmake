@@ -1,0 +1,54 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+  <dict>
+    <key>axes</key>
+    <array>
+
+      <dict>
+        <key>name</key>
+        <string>Weight</string>
+        <key>tag</key>
+        <string>wght</string>
+
+        <key>locations</key>
+        <array/>
+      </dict>
+
+    </array>
+
+    <key>locations</key>
+    <array>
+
+      <!--
+        A format 4 dictionary must contain `name` and `axis_values`, the latter
+        is a dictionary of axis names to values. `flags` are optional.
+      -->
+      <dict>
+        <key>name</key>
+        <string>ASDF</string>
+        <key>axis_values</key>
+        <dict>
+          <key>Weight</key>
+          <integer>333</integer>
+        </dict>
+      </dict>
+
+      <dict>
+        <key>name</key>
+        <string>fgfg</string>
+        <key>axis_values</key>
+        <dict>
+          <key>Weight</key>
+          <integer>333</integer>
+        </dict>
+        <key>flags</key>
+        <array>
+          <string>ElidableAxisValueName</string>
+        </array>
+      </dict>
+
+    </array>
+
+  </dict>
+</plist>
