@@ -7,6 +7,7 @@ from typing import List, Optional
 import fontTools.designspaceLib
 import fontTools.ttLib
 
+import statmake
 import statmake.classes
 import statmake.lib
 from statmake.errors import Error, StylespaceError
@@ -16,6 +17,9 @@ def main(args: Optional[List[str]] = None) -> None:
     logging.basicConfig(format="%(levelname)s: %(message)s")
 
     parser = argparse.ArgumentParser()
+    parser.add_argument(
+        "--version", action="version", version=statmake.__version__,
+    )
     parser.add_argument(
         "--stylespace",
         type=statmake.classes.Stylespace.from_file,
