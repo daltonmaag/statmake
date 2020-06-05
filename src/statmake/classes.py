@@ -207,6 +207,19 @@ class Stylespace:
                     f"expected was {reference_languages}."
                 )
 
+        # Ensure linked_values are present on the same axis in the Stylespace
+        for axis in self.axes:
+            values = {l.value for l in axis.locations}
+            for location in axis.locations:
+                linked_value: Optional[float] = getattr(location, "linked_value", None)
+                if linked_value is not None and linked_value not in values:
+                    raise StylespaceError(
+                        f"On axis '{axis.name.default}', location "
+                        f"'{location.name.default}' specifies a linked_value of "
+                        f"'{linked_value}', which does not exist on that axis "
+                        "(ranges are ignored)."
+                    )
+
     @classmethod
     def from_dict(cls, dict_data: dict) -> "Stylespace":
         """Construct Stylespace from unstructured dict data."""
