@@ -249,14 +249,23 @@ class Stylespace:
         converter = cattr.Converter()
         converter.register_structure_hook(
             FlagList,
-            lambda list_of_str_flags, cls: cls(
+            lambda list_of_str_flags, cls: cls(  # type: ignore
                 [getattr(AxisValueFlag, f) for f in list_of_str_flags]
             ),
         )
         converter.register_structure_hook(
-            NameRecord, lambda data, cls: cls.structure(data)
+            NameRecord, lambda data, cls: cls.structure(data)  # type: ignore
         )
         return converter.structure(dict_data, cls)
+
+    def to_dict(self) -> Dict[str, Any]:
+        """Construct dict from structured Stylespace data."""
+        converter = cattr.Converter()
+        converter.register_unstructure_hook(  # type: ignore
+            FlagList, lambda cls: [flag.name for flag in cls.flags],  # type: ignore
+        )
+        converter.register_unstructure_hook(NameRecord, lambda cls: cls.mapping)  # type: ignore
+        return converter.unstructure(self)
 
     @classmethod
     def from_bytes(cls, stylespace_content: bytes) -> "Stylespace":
