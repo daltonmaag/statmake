@@ -76,17 +76,14 @@ pyclipper = ">=1.1.0.post1"
 
 [[package]]
 name = "cattrs"
-version = "1.1.0"
-description = "Composable complex class support for attrs."
+version = "1.8.0"
+description = "Composable complex class support for attrs and dataclasses."
 category = "main"
 optional = false
-python-versions = "*"
+python-versions = ">=3.7,<4.0"
 
 [package.dependencies]
-attrs = ">=20.1.0"
-
-[package.extras]
-dev = ["bumpversion", "wheel", "watchdog", "flake8", "tox", "coverage", "sphinx", "pytest", "hypothesis", "pendulum", "isort", "black"]
+attrs = ">=20"
 
 [[package]]
 name = "cffsubr"
@@ -98,7 +95,6 @@ python-versions = ">=3.6"
 
 [package.dependencies]
 fontTools = ">=4.10.2"
-importlib-resources = {version = "*", markers = "python_version < \"3.7\""}
 
 [package.extras]
 testing = ["pytest"]
@@ -202,21 +198,6 @@ zipp = ">=0.5"
 [package.extras]
 docs = ["sphinx", "rst.linker"]
 testing = ["packaging", "pep517", "importlib-resources (>=1.3)"]
-
-[[package]]
-name = "importlib-resources"
-version = "5.3.0"
-description = "Read resources from Python packages"
-category = "dev"
-optional = false
-python-versions = ">=3.6"
-
-[package.dependencies]
-zipp = {version = ">=3.1.0", markers = "python_version < \"3.10\""}
-
-[package.extras]
-docs = ["sphinx", "jaraco.packaging (>=8.2)", "rst.linker (>=1.9)"]
-testing = ["pytest (>=6)", "pytest-checkdocs (>=2.4)", "pytest-flake8", "pytest-cov", "pytest-enabler (>=1.0.1)", "pytest-black (>=0.3.7)", "pytest-mypy"]
 
 [[package]]
 name = "iniconfig"
@@ -444,11 +425,11 @@ python-versions = "*"
 
 [[package]]
 name = "ufo2ft"
-version = "2.24.0"
+version = "2.25.1"
 description = "A bridge between UFOs and FontTools."
 category = "dev"
 optional = false
-python-versions = ">=3.6"
+python-versions = ">=3.7"
 
 [package.dependencies]
 booleanOperations = ">=0.9.0"
@@ -498,8 +479,8 @@ testing = ["pytest (>=4.6)", "pytest-checkdocs (>=2.4)", "pytest-flake8", "pytes
 
 [metadata]
 lock-version = "1.1"
-python-versions = "^3.6"
-content-hash = "05e346e5662d17df16ea70c6ebc3530259bc093b6fea7d98fc61ff9c151f9aef"
+python-versions = "^3.7"
+content-hash = "4eb80350907708595ff150c97de30bc00eae686ea62231c12a25854e98472534"
 
 [metadata.files]
 appdirs = [
@@ -527,8 +508,8 @@ booleanoperations = [
     {file = "booleanOperations-0.9.0.zip", hash = "sha256:8cfa821c32ad374fa120d6b2e0b444ebeac57c91e6631528645fa19ac2a281b8"},
 ]
 cattrs = [
-    {file = "cattrs-1.1.0-py3-none-any.whl", hash = "sha256:5a544e78c92679a20e6fffe9d242338b9bb261a88a06653154d4368d08bf6f11"},
-    {file = "cattrs-1.1.0.tar.gz", hash = "sha256:6ec92a3816dc94afdcc24d76be738198a21870a0e64eace9c3ef0e56decd00df"},
+    {file = "cattrs-1.8.0-py3-none-any.whl", hash = "sha256:901fb2040529ae8fc9d93f48a2cdf7de3e983312ffb2a164ffa4e9847f253af1"},
+    {file = "cattrs-1.8.0.tar.gz", hash = "sha256:5c121ab06a7cac494813c228721a7feb5a6423b17316eeaebf13f5a03e5b0d53"},
 ]
 cffsubr = [
     {file = "cffsubr-0.2.8-py3-none-macosx_10_9_x86_64.whl", hash = "sha256:20e63bc558742c6ef8ba3e0fbc47fb3e09d15b0ed8a2ee399ee0c777ff822b4b"},
@@ -611,10 +592,6 @@ fs = [
 importlib-metadata = [
     {file = "importlib_metadata-1.7.0-py2.py3-none-any.whl", hash = "sha256:dc15b2969b4ce36305c51eebe62d418ac7791e9a157911d58bfb1f9ccd8e2070"},
     {file = "importlib_metadata-1.7.0.tar.gz", hash = "sha256:90bb658cdbbf6d1735b6341ce708fc7024a3e14e99ffdc5783edea9f9b077f83"},
-]
-importlib-resources = [
-    {file = "importlib_resources-5.3.0-py3-none-any.whl", hash = "sha256:7a65eb0d8ee98eedab76e6deb51195c67f8e575959f6356a6e15fd7e1148f2a3"},
-    {file = "importlib_resources-5.3.0.tar.gz", hash = "sha256:f2e58e721b505a79abe67f5868d99f8886aec8594c962c7490d0c22925f518da"},
 ]
 iniconfig = [
     {file = "iniconfig-1.1.1-py2.py3-none-any.whl", hash = "sha256:011e24c64b7f47f6ebd835bb12a743f2fbe9a26d4cecaa7f53bc4f35ee9da8b3"},
@@ -820,8 +797,8 @@ typing-extensions = [
     {file = "typing_extensions-3.10.0.2.tar.gz", hash = "sha256:49f75d16ff11f1cd258e1b988ccff82a3ca5570217d7ad8c5f48205dd99a677e"},
 ]
 ufo2ft = [
-    {file = "ufo2ft-2.24.0-py2.py3-none-any.whl", hash = "sha256:0bc862e91bc1c50322adac7545bce0876320ac1db92f7722f362ce375cd4b5cc"},
-    {file = "ufo2ft-2.24.0.zip", hash = "sha256:50ae2ab94329aa7749a29521cfb128a685291ada7b7038e5e0b4649bb2617c1e"},
+    {file = "ufo2ft-2.25.1-py2.py3-none-any.whl", hash = "sha256:3ed6c539e47c122be706c08a709c855f71277d415d592329302966bf2686a0ac"},
+    {file = "ufo2ft-2.25.1.zip", hash = "sha256:41ade052a6bc4c6b192f627922b52053cab307295512724e8fad6f2b12c49e61"},
 ]
 ufolib2 = [
     {file = "ufoLib2-0.11.4-py3-none-any.whl", hash = "sha256:312752019bedfe3c55bd5a3ba88012a0e26d67df77ed3b12a56ddb66129f7deb"},
