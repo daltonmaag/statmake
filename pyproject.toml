@@ -42,5 +42,5 @@ line_length = 88
 known_first_party = "statmake"
 
 [build-system]
-requires = ["poetry>=1.0.0"]
-build-backend = "poetry.masonry.api"
+requires = ["poetry-core"]
+build-backend = "poetry.core.masonry.api"
