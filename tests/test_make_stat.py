@@ -53,7 +53,7 @@ def test_load_stylespace_duplicate_value(datadir):
 
 def test_load_stylespace_duplicate_value_format4(datadir):
     with pytest.raises(
-        StylespaceError, match=r".* location 'fgfg' specifies a duplicate location .*",
+        StylespaceError, match=r".* location 'fgfg' specifies a duplicate location .*"
     ):
         statmake.classes.Stylespace.from_file(
             datadir / "TestDuplicateValueFormat4.stylespace"
@@ -168,10 +168,10 @@ def test_generation_wrong_tag(datadir):
 
 def test_generation_incomplete_location(datadir):
     with pytest.raises(
-        Error, match=r"missing locations for the following axes: Italic.",
+        Error, match=r"missing locations for the following axes: Italic."
     ):
         _ = testutil.generate_variable_font(
-            datadir / "Test_Wght_Italic.designspace", datadir / "Test.stylespace", {},
+            datadir / "Test_Wght_Italic.designspace", datadir / "Test.stylespace", {}
         )
 
 

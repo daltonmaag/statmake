@@ -262,7 +262,7 @@ class Stylespace:
         """Construct dict from structured Stylespace data."""
         converter = cattr.Converter()
         converter.register_unstructure_hook(  # type: ignore
-            FlagList, lambda cls: [flag.name for flag in cls.flags],  # type: ignore
+            FlagList, lambda cls: [flag.name for flag in cls.flags]  # type: ignore
         )
         converter.register_unstructure_hook(NameRecord, lambda cls: cls.mapping)  # type: ignore
         return converter.unstructure(self)
