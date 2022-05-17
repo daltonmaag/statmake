@@ -11,7 +11,9 @@ from . import testutil
 
 def test_load_stylespace_broken_range(datadir):
     with pytest.raises(StylespaceError, match=r"Range .*"):
-        statmake.classes.Stylespace.from_file(datadir / "TestBroken.stylespace")
+        statmake.classes.Stylespace.from_file(
+            datadir / "TestBroken.stylespace", detailed_validation=False
+        )
 
 
 def test_load_stylespace_broken_ordering(datadir):
@@ -63,7 +65,7 @@ def test_load_stylespace_duplicate_value_format4(datadir):
 def test_load_stylespace_broken_multilingual_no_en(datadir):
     with pytest.raises(StylespaceError, match=r".* must have a default English .*"):
         statmake.classes.Stylespace.from_file(
-            datadir / "TestMultilingualNoEn.stylespace"
+            datadir / "TestMultilingualNoEn.stylespace", detailed_validation=False
         )
 
 

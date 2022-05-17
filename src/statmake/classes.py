@@ -244,9 +244,11 @@ class Stylespace:
             named_values.add(named_location_tuple)
 
     @classmethod
-    def from_dict(cls, dict_data: dict) -> "Stylespace":
+    def from_dict(
+        cls, dict_data: dict, detailed_validation: bool = True
+    ) -> "Stylespace":
         """Construct Stylespace from unstructured dict data."""
-        converter = cattr.Converter()
+        converter = cattrs.Converter(detailed_validation=detailed_validation)
         converter.register_structure_hook(
             FlagList,
             lambda list_of_str_flags, cls: cls(  # type: ignore
@@ -268,16 +270,22 @@ class Stylespace:
         return converter.unstructure(self)
 
     @classmethod
-    def from_bytes(cls, stylespace_content: bytes) -> "Stylespace":
+    def from_bytes(
+        cls, stylespace_content: bytes, detailed_validation: bool = True
+    ) -> "Stylespace":
         """Construct Stylespace from bytes containing (XML) plist data."""
         stylespace_content_parsed = fontTools.misc.plistlib.loads(stylespace_content)
-        return cls.from_dict(stylespace_content_parsed)
+        return cls.from_dict(stylespace_content_parsed, detailed_validation)
 
     @classmethod
-    def from_file(cls, stylespace_path: Union[str, bytes, os.PathLike]) -> "Stylespace":
+    def from_file(
+        cls,
+        stylespace_path: Union[str, bytes, os.PathLike],
+        detailed_validation: bool = True,
+    ) -> "Stylespace":
         """Construct Stylespace from path to (XML) plist file."""
         with open(stylespace_path, "rb") as fp:
-            return cls.from_bytes(fp.read())
+            return cls.from_bytes(fp.read(), detailed_validation)
 
     @classmethod
     def from_designspace(
