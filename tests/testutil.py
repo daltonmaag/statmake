@@ -17,7 +17,7 @@ def dump_axes(font, axes_array):
     dump_list = []
     for axis in axes_array:
         entry = {
-            "Name": statmake.lib._default_name_string(font, axis.AxisNameID),
+            "Name": dump_name_ids(font, axis.AxisNameID),
             "AxisTag": axis.AxisTag,
             "AxisOrdering": axis.AxisOrdering,
         }
