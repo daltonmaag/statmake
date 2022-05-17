@@ -17,9 +17,7 @@ def main(args: Optional[List[str]] = None) -> None:
     logging.basicConfig(format="%(levelname)s: %(message)s")
 
     parser = argparse.ArgumentParser()
-    parser.add_argument(
-        "--version", action="version", version=statmake.__version__,
-    )
+    parser.add_argument("--version", action="version", version=statmake.__version__)
     parser.add_argument(
         "--stylespace",
         type=statmake.classes.Stylespace.from_file,

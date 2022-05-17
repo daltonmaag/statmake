@@ -12,6 +12,8 @@
           <string>Weight</string>
           <key>de</key>
           <string>Gäwicht</string>
+          <key>fr</key>
+          <string>Géwicht</string>
         </dict>
         <key>tag</key>
         <string>wght</string>
@@ -21,7 +23,28 @@
 
           <dict>
             <key>name</key>
-            <string>Light</string>
+            <dict>
+              <key>en</key>
+              <string>Thin</string>
+              <key>de</key>
+              <string>Dünn</string>
+              <key>fr</key>
+              <string>Dûnn</string>
+            </dict>
+            <key>value</key>
+            <integer>200</integer>
+          </dict>
+
+          <dict>
+            <key>name</key>
+            <dict>
+              <key>en</key>
+              <string>Light</string>
+              <key>de</key>
+              <string>Leicht</string>
+              <key>fr</key>
+              <string>vfdgf</string>
+            </dict>
             <key>value</key>
             <integer>300</integer>
           </dict>
@@ -33,6 +56,8 @@
               <string>Regular</string>
               <key>de</key>
               <string>Regulär</string>
+              <key>fr</key>
+              <string>aaa</string>
             </dict>
             <key>value</key>
             <integer>400</integer>
@@ -48,12 +73,42 @@
             <key>name</key>
             <dict>
               <key>en</key>
+              <string>AA</string>
+              <key>de</key>
+              <string>BB</string>
+              <key>fr</key>
+              <string>CC</string>
+            </dict>
+            <key>value</key>
+            <integer>600</integer>
+          </dict>
+
+          <dict>
+            <key>name</key>
+            <dict>
+              <key>en</key>
               <string>Bold</string>
+              <key>de</key>
+              <string>Böld</string>
               <key>fr</key>
               <string>Bôld</string>
             </dict>
             <key>value</key>
             <integer>700</integer>
+          </dict>
+
+          <dict>
+            <key>name</key>
+            <dict>
+              <key>en</key>
+              <string>asdf</string>
+              <key>de</key>
+              <string>asdf</string>
+              <key>fr</key>
+              <string>asdf</string>
+            </dict>
+            <key>value</key>
+            <integer>900</integer>
           </dict>
 
         </array>
@@ -66,6 +121,8 @@
           <string>Italic</string>
           <key>de</key>
           <string>Italienisch</string>
+          <key>fr</key>
+          <string>Itâlic</string>
         </dict>
         <key>tag</key>
         <string>ital</string>
@@ -77,6 +134,8 @@
             <dict>
               <key>en</key>
               <string>Upright</string>
+              <key>fr</key>
+              <string>Ûpright</string>
               <key>de</key>
               <string>Aufrecht</string>
             </dict>
@@ -97,6 +156,8 @@
               <string>Italic</string>
               <key>de</key>
               <string>Italienisch</string>
+              <key>fr</key>
+              <string>Itâlic</string>
             </dict>
             <key>value</key>
             <integer>1</integer>
@@ -104,6 +165,57 @@
 
         </array>
       </dict>
+    </array>
+
+    <key>locations</key>
+    <array>
+
+      <!--
+        A format 4 dictionary must contain `name` and `axis_values`, the latter
+        is a dictionary of axis names to values. `flags` are optional.
+      -->
+      <dict>
+        <key>name</key>
+        <dict>
+          <key>en</key>
+          <string>ASDF</string>
+          <key>de</key>
+          <string>ASDF</string>
+          <key>fr</key>
+          <string>ASDF</string>
+        </dict>
+        <key>axis_values</key>
+        <dict>
+          <key>Weight</key>
+          <integer>333</integer>
+          <key>Italic</key>
+          <integer>1</integer>
+        </dict>
+      </dict>
+
+      <dict>
+        <key>name</key>
+        <dict>
+          <key>en</key>
+          <string>FGFG</string>
+          <key>de</key>
+          <string>FGFG</string>
+          <key>fr</key>
+          <string>FGFG</string>
+        </dict>
+        <key>axis_values</key>
+        <dict>
+          <key>Weight</key>
+          <integer>650</integer>
+          <key>Italic</key>
+          <real>0.5</real>
+        </dict>
+        <key>flags</key>
+        <array>
+          <string>ElidableAxisValueName</string>
+        </array>
+      </dict>
+
     </array>
 
   </dict>

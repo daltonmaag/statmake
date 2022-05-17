@@ -53,7 +53,7 @@ def test_load_stylespace_duplicate_value(datadir):
 
 def test_load_stylespace_duplicate_value_format4(datadir):
     with pytest.raises(
-        StylespaceError, match=r".* location 'fgfg' specifies a duplicate location .*",
+        StylespaceError, match=r".* location 'fgfg' specifies a duplicate location .*"
     ):
         statmake.classes.Stylespace.from_file(
             datadir / "TestDuplicateValueFormat4.stylespace"
@@ -168,10 +168,10 @@ def test_generation_wrong_tag(datadir):
 
 def test_generation_incomplete_location(datadir):
     with pytest.raises(
-        Error, match=r"missing locations for the following axes: Italic.",
+        Error, match=r"missing locations for the following axes: Italic."
     ):
         _ = testutil.generate_variable_font(
-            datadir / "Test_Wght_Italic.designspace", datadir / "Test.stylespace", {},
+            datadir / "Test_Wght_Italic.designspace", datadir / "Test.stylespace", {}
         )
 
 
@@ -185,8 +185,8 @@ def test_generation_full(datadir):
 
     stat_axes = testutil.dump_axes(varfont, stat_table.table.DesignAxisRecord.Axis)
     stat_axes_expected = [
-        {"Name": "Weight", "AxisTag": "wght", "AxisOrdering": 0},
-        {"Name": "Italic", "AxisTag": "ital", "AxisOrdering": 1},
+        {"Name": {"en": "Weight"}, "AxisTag": "wght", "AxisOrdering": 0},
+        {"Name": {"en": "Italic"}, "AxisTag": "ital", "AxisOrdering": 1},
     ]
     assert stat_axes == stat_axes_expected
 
@@ -284,8 +284,8 @@ def test_generation_upright(datadir):
 
     stat_axes = testutil.dump_axes(varfont, stat_table.table.DesignAxisRecord.Axis)
     stat_axes_expected = [
-        {"Name": "Weight", "AxisTag": "wght", "AxisOrdering": 0},
-        {"Name": "Italic", "AxisTag": "ital", "AxisOrdering": 1},
+        {"Name": {"en": "Weight"}, "AxisTag": "wght", "AxisOrdering": 0},
+        {"Name": {"en": "Italic"}, "AxisTag": "ital", "AxisOrdering": 1},
     ]
     assert stat_axes == stat_axes_expected
 
@@ -362,8 +362,8 @@ def test_generation_italic(datadir):
 
     stat_axes = testutil.dump_axes(varfont, stat_table.table.DesignAxisRecord.Axis)
     stat_axes_expected = [
-        {"Name": "Weight", "AxisTag": "wght", "AxisOrdering": 0},
-        {"Name": "Italic", "AxisTag": "ital", "AxisOrdering": 1},
+        {"Name": {"en": "Weight"}, "AxisTag": "wght", "AxisOrdering": 0},
+        {"Name": {"en": "Italic"}, "AxisTag": "ital", "AxisOrdering": 1},
     ]
     assert stat_axes == stat_axes_expected
 
@@ -428,6 +428,111 @@ def test_generation_italic(datadir):
             "Flags": 0,
             "Format": 4,
             "Name": {"en": "ASDF"},
+        },
+    ]
+    assert sorted(stat_axis_values, key=lambda x: x["Name"]["en"]) == sorted(
+        stat_axis_values_expected, key=lambda x: x["Name"]["en"]
+    )
+
+    assert stat_table.table.ElidedFallbackNameID == 2
+
+
+def test_generation_full_multilingual(datadir):
+    varfont = testutil.generate_variable_font(
+        datadir / "Test_WghtItal.designspace", datadir / "TestMultilingual.stylespace"
+    )
+
+    stat_table = varfont["STAT"]
+    assert stat_table.table.Version == 0x00010002
+
+    stat_axes = testutil.dump_axes(varfont, stat_table.table.DesignAxisRecord.Axis)
+    stat_axes_expected = [
+        {
+            "Name": {"de": "Gäwicht", "en": "Weight", "fr": "Géwicht"},
+            "AxisTag": "wght",
+            "AxisOrdering": 0,
+        },
+        {
+            "Name": {"de": "Italienisch", "en": "Italic", "fr": "Itâlic"},
+            "AxisTag": "ital",
+            "AxisOrdering": 1,
+        },
+    ]
+    assert stat_axes == stat_axes_expected
+
+    stat_axis_values = testutil.dump_axis_values(
+        varfont, stat_table.table.AxisValueArray.AxisValue
+    )
+    stat_axis_values_expected = [
+        {
+            "Format": 1,
+            "Name": {"de": "Dünn", "en": "Thin", "fr": "Dûnn"},
+            "Flags": 0,
+            "AxisIndex": 0,
+            "Value": 200.0,
+        },
+        {
+            "Format": 1,
+            "Name": {"de": "Leicht", "en": "Light", "fr": "vfdgf"},
+            "Flags": 0,
+            "AxisIndex": 0,
+            "Value": 300.0,
+        },
+        {
+            "Format": 3,
+            "Name": {"de": "Regulär", "en": "Regular", "fr": "aaa"},
+            "Flags": 2,
+            "AxisIndex": 0,
+            "Value": 400.0,
+            "LinkedValue": 700.0,
+        },
+        {
+            "Format": 1,
+            "Name": {"de": "BB", "en": "AA", "fr": "CC"},
+            "Flags": 0,
+            "AxisIndex": 0,
+            "Value": 600.0,
+        },
+        {
+            "Format": 1,
+            "Name": {"de": "Böld", "en": "Bold", "fr": "Bôld"},
+            "Flags": 0,
+            "AxisIndex": 0,
+            "Value": 700.0,
+        },
+        {
+            "Format": 1,
+            "Name": {"de": "asdf", "en": "asdf", "fr": "asdf"},
+            "Flags": 0,
+            "AxisIndex": 0,
+            "Value": 900.0,
+        },
+        {
+            "Format": 3,
+            "Name": {"de": "Aufrecht", "en": "Upright", "fr": "Ûpright"},
+            "Flags": 2,
+            "AxisIndex": 1,
+            "Value": 0.0,
+            "LinkedValue": 1.0,
+        },
+        {
+            "Format": 1,
+            "Name": {"de": "Italienisch", "en": "Italic", "fr": "Itâlic"},
+            "Flags": 0,
+            "AxisIndex": 1,
+            "Value": 1.0,
+        },
+        {
+            "Format": 4,
+            "Name": {"de": "ASDF", "en": "ASDF", "fr": "ASDF"},
+            "Flags": 0,
+            "AxisValueRecord": [(0, 333.0), (1, 1.0)],
+        },
+        {
+            "Format": 4,
+            "Name": {"de": "FGFG", "en": "FGFG", "fr": "FGFG"},
+            "Flags": 2,
+            "AxisValueRecord": [(0, 650.0), (1, 0.5)],
         },
     ]
     assert sorted(stat_axis_values, key=lambda x: x["Name"]["en"]) == sorted(

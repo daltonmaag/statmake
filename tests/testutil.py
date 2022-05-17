@@ -17,7 +17,7 @@ def dump_axes(font, axes_array):
     dump_list = []
     for axis in axes_array:
         entry = {
-            "Name": statmake.lib._default_name_string(font, axis.AxisNameID),
+            "Name": dump_name_ids(font, axis.AxisNameID),
             "AxisTag": axis.AxisTag,
             "AxisOrdering": axis.AxisOrdering,
         }
@@ -68,6 +68,7 @@ def dump_name_ids(otfont: fontTools.ttLib.TTFont, name_id: int) -> Mapping[str, 
 
 
 def empty_UFO(style_name: str) -> ufoLib2.Font:
+    # pylint: disable=assigning-non-slot
     ufo = ufoLib2.Font()
     ufo.info.familyName = "Test"
     ufo.info.styleName = style_name
