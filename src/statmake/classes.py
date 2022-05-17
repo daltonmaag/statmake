@@ -4,8 +4,8 @@ import os
 from pathlib import Path
 from typing import Any, Dict, List, Mapping, Optional, Set, Tuple, Union
 
-import attr
-import cattr
+import attrs
+import cattrs
 import fontTools.designspaceLib
 import fontTools.misc.plistlib
 
@@ -20,12 +20,12 @@ class AxisValueFlag(enum.Flag):
     ElidableAxisValueName = 0x0002
 
 
-@attr.s(auto_attribs=True, frozen=True, slots=True)
+@attrs.frozen
 class FlagList:
     """Represent a list of AxisValueFlags so I can implement a value
     property."""
 
-    flags: List[AxisValueFlag] = attr.ib(factory=list)
+    flags: List[AxisValueFlag] = attrs.field(factory=list)
 
     @property
     def value(self) -> int:
@@ -35,7 +35,7 @@ class FlagList:
         return functools.reduce(lambda x, y: x | y, self.flags).value
 
 
-@attr.s(auto_attribs=True, frozen=True, slots=True)
+@attrs.frozen
 class NameRecord:
     """Represent a IETF BCP 47 language code to name string mapping for the
     `name` table."""
@@ -73,11 +73,11 @@ class NameRecord:
         raise StylespaceError(f"Don't know how to construct NameRecord from '{data}'.")
 
 
-@attr.s(auto_attribs=True, frozen=True, slots=True)
+@attrs.frozen
 class LocationFormat1:
     name: NameRecord
     value: float
-    flags: FlagList = attr.ib(factory=FlagList)
+    flags: FlagList = attrs.field(factory=FlagList)
 
     def to_builder_dict(self) -> Dict[str, Any]:
         return {
@@ -87,12 +87,12 @@ class LocationFormat1:
         }
 
 
-@attr.s(auto_attribs=True, frozen=True, slots=True)
+@attrs.frozen
 class LocationFormat2:
     name: NameRecord
     value: float
     range: Tuple[float, float]
-    flags: FlagList = attr.ib(factory=FlagList)
+    flags: FlagList = attrs.field(factory=FlagList)
 
     def __attrs_post_init__(self) -> None:
         if len(self.range) != 2:
@@ -108,12 +108,12 @@ class LocationFormat2:
         }
 
 
-@attr.s(auto_attribs=True, frozen=True, slots=True)
+@attrs.frozen
 class LocationFormat3:
     name: NameRecord
     value: float
     linked_value: float
-    flags: FlagList = attr.ib(factory=FlagList)
+    flags: FlagList = attrs.field(factory=FlagList)
 
     def to_builder_dict(self) -> Dict[str, Any]:
         return {
@@ -124,11 +124,11 @@ class LocationFormat3:
         }
 
 
-@attr.s(auto_attribs=True, frozen=True, slots=True)
+@attrs.frozen
 class LocationFormat4:
     name: NameRecord
     axis_values: Mapping[str, float]
-    flags: FlagList = attr.ib(factory=FlagList)
+    flags: FlagList = attrs.field(factory=FlagList)
 
     def to_builder_dict(self, name_to_tag: Mapping[str, str]) -> Dict[str, Any]:
         return {
@@ -138,20 +138,20 @@ class LocationFormat4:
         }
 
 
-@attr.s(auto_attribs=True, frozen=True, slots=True)
+@attrs.frozen
 class Axis:
     name: NameRecord
     tag: str
-    locations: List[Union[LocationFormat1, LocationFormat2, LocationFormat3]] = attr.ib(
-        factory=list
-    )
+    locations: List[
+        Union[LocationFormat1, LocationFormat2, LocationFormat3]
+    ] = attrs.field(factory=list)
     ordering: Optional[int] = None
 
 
-@attr.s(auto_attribs=True, frozen=True, slots=True)
+@attrs.frozen
 class Stylespace:
     axes: List[Axis]
-    locations: List[LocationFormat4] = attr.ib(factory=list)
+    locations: List[LocationFormat4] = attrs.field(factory=list)
     elided_fallback_name_id: int = 2
 
     def __attrs_post_init__(self) -> None:
@@ -260,7 +260,7 @@ class Stylespace:
 
     def to_dict(self) -> Dict[str, Any]:
         """Construct dict from structured Stylespace data."""
-        converter = cattr.Converter()
+        converter = cattrs.Converter()
         converter.register_unstructure_hook(  # type: ignore
             FlagList, lambda cls: [flag.name for flag in cls.flags]  # type: ignore
         )
