@@ -245,7 +245,7 @@ class Stylespace:
 
     @classmethod
     def from_dict(
-        cls, dict_data: dict, detailed_validation: bool = True
+        cls, dict_data: dict, detailed_validation: bool = False
     ) -> "Stylespace":
         """Construct Stylespace from unstructured dict data."""
         converter = cattrs.Converter(detailed_validation=detailed_validation)
@@ -271,7 +271,7 @@ class Stylespace:
 
     @classmethod
     def from_bytes(
-        cls, stylespace_content: bytes, detailed_validation: bool = True
+        cls, stylespace_content: bytes, detailed_validation: bool = False
     ) -> "Stylespace":
         """Construct Stylespace from bytes containing (XML) plist data."""
         stylespace_content_parsed = fontTools.misc.plistlib.loads(stylespace_content)
@@ -281,7 +281,7 @@ class Stylespace:
     def from_file(
         cls,
         stylespace_path: Union[str, bytes, os.PathLike],
-        detailed_validation: bool = True,
+        detailed_validation: bool = False,
     ) -> "Stylespace":
         """Construct Stylespace from path to (XML) plist file."""
         with open(stylespace_path, "rb") as fp:
