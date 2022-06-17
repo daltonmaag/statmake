@@ -41,6 +41,33 @@ use_parentheses = true
 line_length = 88
 known_first_party = "statmake"
 
+[tool.mypy]
+python_version = "3.7"
+platform = "linux"
+disallow_incomplete_defs = true
+disallow_untyped_defs = true
+no_implicit_optional = true
+strict_equality = true
+strict_optional = true
+warn_no_return = true
+warn_redundant_casts = true
+warn_unreachable = true
+
+[[tool.mypy.overrides]]
+module = "tests.*"
+disallow_untyped_defs = false
+
+[[tool.mypy.overrides]]
+module = [
+    "fontTools.*",
+    "ufo2ft",
+    "ufoLib2",
+    "pytest",
+    "testutil",
+    "importlib_metadata",
+]
+ignore_missing_imports = true
+
 [build-system]
 requires = ["poetry-core"]
 build-backend = "poetry.core.masonry.api"
