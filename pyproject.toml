@@ -68,6 +68,25 @@ module = [
 ]
 ignore_missing_imports = true
 
+[tool.pylint."MESSAGES CONTROL"]
+disable = [
+    "all",
+]
+enable = [
+    "E",
+    "F",
+    "anomalous-backslash-in-string",
+    "bad-format-string",
+    "bad-open-mode",
+    "binary-op-exception",
+    "duplicate-key",
+    "global-variable-not-assigned",
+    "unnecessary-semicolon",
+    "unreachable",
+    "unused-variable",
+    "unused-import",
+]
+
 [build-system]
 requires = ["poetry-core"]
 build-backend = "poetry.core.masonry.api"
