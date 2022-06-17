@@ -1,6 +1,6 @@
 [tool.poetry]
 name = "statmake"
-version = "0.5.0"
+version = "0.5.1"
 description = "Applies STAT information from a Stylespace to a variable font."
 authors = ["Nikolaus Waxweiler <nikolaus.waxweiler@daltonmaag.com>"]
 license = "MIT"
