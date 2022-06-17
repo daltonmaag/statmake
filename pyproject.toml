@@ -1,6 +1,6 @@
 [tool.poetry]
 name = "statmake"
-version = "0.5.0"
+version = "0.5.1"
 description = "Applies STAT information from a Stylespace to a variable font."
 authors = ["Nikolaus Waxweiler <nikolaus.waxweiler@daltonmaag.com>"]
 license = "MIT"
@@ -9,9 +9,9 @@ repository = "https://github.com/daltonmaag/statmake"
 include = ["py.typed"]
 
 [tool.poetry.dependencies]
-attrs = ">= 21.3"
-cattrs = "^22.1"
-fonttools = {version = "^4.11", extras = ["ufo"]}
+attrs = ">=21.3"
+cattrs = ">=22.1"
+fonttools = {version = ">=4.11", extras = ["ufo"]}
 python = "^3.7"
 
 # https://medium.com/@cjolowicz/hypermodern-python-6-ci-cd-b233accfa2f6#bf20
@@ -24,8 +24,8 @@ isort = "*"
 mypy = "*"
 pylint = "*"
 pytest = "*"
-ufo2ft = "^2.7"
-ufoLib2 = ">= 0.4"
+ufo2ft = ">=2.7"
+ufoLib2 = ">=0.4"
 
 [tool.poetry.scripts]
 statmake = "statmake.cli:main"
@@ -40,6 +40,52 @@ force_grid_wrap = 0
 use_parentheses = true
 line_length = 88
 known_first_party = "statmake"
+
+[tool.mypy]
+python_version = "3.7"
+platform = "linux"
+disallow_incomplete_defs = true
+disallow_untyped_defs = true
+no_implicit_optional = true
+strict_equality = true
+strict_optional = true
+warn_no_return = true
+warn_redundant_casts = true
+warn_unreachable = true
+
+[[tool.mypy.overrides]]
+module = "tests.*"
+disallow_untyped_defs = false
+
+[[tool.mypy.overrides]]
+module = [
+    "fontTools.*",
+    "ufo2ft",
+    "ufoLib2",
+    "pytest",
+    "testutil",
+    "importlib_metadata",
+]
+ignore_missing_imports = true
+
+[tool.pylint."MESSAGES CONTROL"]
+disable = [
+    "all",
+]
+enable = [
+    "E",
+    "F",
+    "anomalous-backslash-in-string",
+    "bad-format-string",
+    "bad-open-mode",
+    "binary-op-exception",
+    "duplicate-key",
+    "global-variable-not-assigned",
+    "unnecessary-semicolon",
+    "unreachable",
+    "unused-variable",
+    "unused-import",
+]
 
 [build-system]
 requires = ["poetry-core"]
