@@ -12,7 +12,7 @@ include = ["py.typed"]
 attrs = ">=21.3"
 cattrs = ">=22.2"
 fonttools = {version = ">=4.11", extras = ["ufo"]}
-python = "^3.7"
+python = "^3.7.2"
 
 # https://medium.com/@cjolowicz/hypermodern-python-6-ci-cd-b233accfa2f6#bf20
 importlib_metadata = {version = ">=1.6.0", python = "<3.8"}
@@ -34,11 +34,7 @@ statmake = "statmake.cli:main"
 target-version = ["py37"]
 
 [tool.isort]
-multi_line_output = 3
-include_trailing_comma = true
-force_grid_wrap = 0
-use_parentheses = true
-line_length = 88
+profile = "black"
 known_first_party = "statmake"
 
 [tool.mypy]
@@ -65,6 +61,8 @@ module = [
     "pytest",
     "testutil",
     "importlib_metadata",
+    "exceptiongroup",
+    "tomli",
 ]
 ignore_missing_imports = true
 
