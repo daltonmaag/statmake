@@ -10,7 +10,7 @@ include = ["py.typed"]
 
 [tool.poetry.dependencies]
 attrs = ">=21.3"
-cattrs = ">=22.1"
+cattrs = ">=22.2"
 fonttools = {version = ">=4.11", extras = ["ufo"]}
 python = "^3.7"
 
