@@ -10,7 +10,7 @@ from . import testutil
 
 
 def test_load_stylespace_broken_range(datadir):
-    with pytest.raises(StylespaceError, match=r"Range .*"):
+    with pytest.raises(ValueError, match=r"Not enough values .*"):
         statmake.classes.Stylespace.from_file(datadir / "TestBroken.stylespace")
 
 

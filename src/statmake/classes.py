@@ -94,10 +94,6 @@ class LocationFormat2:
     range: Tuple[float, float]
     flags: FlagList = attrs.field(factory=FlagList)
 
-    def __attrs_post_init__(self) -> None:
-        if len(self.range) != 2:
-            raise StylespaceError("Range must be a value pair of (min, max).")
-
     def to_builder_dict(self) -> Dict[str, Any]:
         return {
             "name": self.name.mapping,
