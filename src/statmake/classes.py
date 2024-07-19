@@ -138,9 +138,9 @@ class LocationFormat4:
 class Axis:
     name: NameRecord
     tag: str
-    locations: List[
-        Union[LocationFormat1, LocationFormat2, LocationFormat3]
-    ] = attrs.field(factory=list)
+    locations: List[Union[LocationFormat1, LocationFormat2, LocationFormat3]] = (
+        attrs.field(factory=list)
+    )
     ordering: Optional[int] = None
 
 

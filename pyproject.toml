@@ -12,20 +12,14 @@ include = ["py.typed"]
 attrs = ">=21.3"
 cattrs = ">=22.2"
 fonttools = {version = ">=4.11", extras = ["ufo"]}
-python = "^3.7.2"
-
-# https://medium.com/@cjolowicz/hypermodern-python-6-ci-cd-b233accfa2f6#bf20
-importlib_metadata = {version = ">=1.6.0", python = "<3.8"}
+python = "^3.8"
 
 [tool.poetry.dev-dependencies]
 black = "*"
 coverage = "*"
 isort = "*"
 mypy = "*"
-pylint = [
-    {version = "*", python = "<3.8"},
-    {version = ">=3", python = ">=3.8"}
-]
+pylint = ">=3"
 pytest = "*"
 ufo2ft = ">=2.7"
 ufoLib2 = ">=0.4"
@@ -41,7 +35,7 @@ profile = "black"
 known_first_party = "statmake"
 
 [tool.mypy]
-python_version = "3.7"
+python_version = "3.8"
 platform = "linux"
 disallow_incomplete_defs = true
 disallow_untyped_defs = true
@@ -86,6 +80,12 @@ enable = [
     "unreachable",
     "unused-variable",
     "unused-import",
+]
+
+[tool.pytest.ini_options]
+filterwarnings = [
+    "ignore::DeprecationWarning:fs",
+    "ignore::DeprecationWarning:pkg_resources",
 ]
 
 [build-system]
