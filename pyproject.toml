@@ -28,7 +28,7 @@ ufoLib2 = ">=0.4"
 statmake = "statmake.cli:main"
 
 [tool.black]
-target-version = ["py37"]
+target-version = ["py38"]
 
 [tool.isort]
 profile = "black"
