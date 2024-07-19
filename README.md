@@ -4,7 +4,7 @@
 
 ## Installation
 
-The easiest way is by installing it with `pip`. You need at least Python 3.7.
+The easiest way is by installing it with `pip`. You need at least Python 3.8.
 
 ```
 pip3 install statmake
