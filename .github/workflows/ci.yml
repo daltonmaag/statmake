@@ -12,20 +12,21 @@ jobs:
     runs-on: ${{ matrix.platform }}
     strategy:
       matrix:
+        python-version: ["3.8", "3.13"]
         platform: [ubuntu-latest, windows-latest]
 
     steps:
       - uses: actions/checkout@v4
-      - name: Set up Python
-        with:
-          python-version: "3.x"
+      - name: Set up Python ${{ matrix.python-version }}
         uses: actions/setup-python@v5
+        with:
+          python-version: ${{ matrix.python-version }}
       - name: Install the latest version of uv
         uses: astral-sh/setup-uv@v5
         with:
           version: "latest"
       - name: Lint and test
-        run: uvx --with tox-uv tox --quiet run-parallel
+        run: uvx --with tox-uv tox -e lint,py
 
   # https://packaging.python.org/en/latest/guides/publishing-package-distribution-releases-using-github-actions-ci-cd-workflows/
   deploy:
