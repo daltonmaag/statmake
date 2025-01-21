@@ -12,6 +12,7 @@ def apply_stylespace_to_variable_font(
     stylespace: statmake.classes.Stylespace,
     varfont: fontTools.ttLib.TTFont,
     additional_locations: Mapping[str, float],
+    mac_names: bool = False,
 ) -> None:
     """Generate and apply a STAT table to a variable font.
 
@@ -20,13 +21,16 @@ def apply_stylespace_to_variable_font(
     defining a complete STAT table for variable fonts that do not include all axes of a
     family (either because they intentionally contain just a subset of axes or because
     the designs are incompatible).
+
+    mac_names: Whether to add a platformID=1 name record for every platformID=3 record.
+    Off by default, because these are deprecated.
     """
 
     axes, locations, elided_fallback_name = _generate_builder_data(
         stylespace, varfont, additional_locations
     )
     fontTools.otlLib.builder.buildStatTable(
-        varfont, axes, locations, elided_fallback_name
+        varfont, axes, locations, elided_fallback_name, macNames=mac_names
     )
 
 

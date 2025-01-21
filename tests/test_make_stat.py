@@ -273,6 +273,20 @@ def test_generation_full(datadir):
 
     assert stat_table.table.ElidedFallbackNameID == 2
 
+    names = varfont["name"]
+    assert not any(True for record in names.names if record.platformID == 1)
+
+
+def test_generation_full_mac_names(datadir):
+    varfont = testutil.generate_variable_font(
+        datadir / "Test_WghtItal.designspace",
+        datadir / "Test.stylespace",
+        mac_names=True,
+    )
+
+    names = varfont["name"]
+    assert any(True for record in names.names if record.platformID == 1)
+
 
 def test_generation_upright(datadir):
     varfont = testutil.generate_variable_font(

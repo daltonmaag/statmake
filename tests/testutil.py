@@ -95,6 +95,7 @@ def generate_variable_font(
     designspace_path: Path,
     stylespace_path: Path,
     additional_locations: Optional[Mapping[str, float]] = None,
+    mac_names: bool = False,
 ) -> fontTools.ttLib.TTFont:
     designspace = fontTools.designspaceLib.DesignSpaceDocument.fromfile(
         designspace_path
@@ -110,6 +111,6 @@ def generate_variable_font(
             "org.statmake.additionalLocations", {}
         )
     statmake.lib.apply_stylespace_to_variable_font(
-        stylespace, varfont, additional_locations
+        stylespace, varfont, additional_locations, mac_names=mac_names
     )
     return reload_font(varfont)
