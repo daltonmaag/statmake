@@ -11,6 +11,7 @@ from . import testutil
 def test_cli_stylespace_in_designspace(datadir, tmp_path):
     varfont = empty_varfont(datadir / "Test_Wght_Upright.designspace")
     varfont.save(tmp_path / "varfont.ttf")
+    del varfont
 
     statmake.cli.main(
         [
@@ -23,6 +24,28 @@ def test_cli_stylespace_in_designspace(datadir, tmp_path):
     font = fontTools.ttLib.TTFont(tmp_path / "varfont.ttf")
     v = testutil.dump_axis_values(font, font["STAT"].table.AxisValueArray.AxisValue)
     assert v == TEST_WGHT_UPRIGHT_STAT_DUMP
+
+    names = font["name"]
+    assert not any(True for record in names.names if record.platformID == 1)
+
+
+def test_cli_stylespace_in_designspace_mac_names(datadir, tmp_path):
+    varfont = empty_varfont(datadir / "Test_Wght_Upright.designspace")
+    varfont.save(tmp_path / "varfont.ttf")
+    del varfont
+
+    statmake.cli.main(
+        [
+            "-m",
+            str(datadir / "TestInlineStylespace.designspace"),
+            "--mac-names",
+            str(tmp_path / "varfont.ttf"),
+        ]
+    )
+
+    varfont = fontTools.ttLib.TTFont(tmp_path / "varfont.ttf")
+    names = varfont["name"]
+    assert any(True for record in names.names if record.platformID == 1)
 
 
 def test_cli_designspace_stylespace_external(datadir, tmp_path):

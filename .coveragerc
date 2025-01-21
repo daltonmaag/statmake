@@ -3,7 +3,6 @@
 # See: http://coverage.readthedocs.org/en/coverage-4.0.3/branch.html#branch
 branch = True
 parallel = True
-omit = tests/*
 
 # list of directories or packages to measure
 source = statmake

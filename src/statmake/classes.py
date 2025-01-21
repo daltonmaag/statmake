@@ -206,7 +206,7 @@ class Stylespace:
 
         # Ensure linked_values are present on the same axis in the Stylespace
         for axis in self.axes:
-            values = {l.value for l in axis.locations}
+            values = {location.value for location in axis.locations}
             for location in axis.locations:
                 linked_value: Optional[float] = getattr(location, "linked_value", None)
                 if linked_value is not None and linked_value not in values:
@@ -252,7 +252,8 @@ class Stylespace:
             ),
         )
         converter.register_structure_hook(
-            NameRecord, lambda data, cls: cls.structure(data)  # type: ignore
+            NameRecord,
+            lambda data, cls: cls.structure(data),  # type: ignore
         )
         return converter.structure(dict_data, cls)
 
@@ -260,7 +261,8 @@ class Stylespace:
         """Construct dict from structured Stylespace data."""
         converter = cattrs.Converter()
         converter.register_unstructure_hook(  # type: ignore
-            FlagList, lambda cls: [flag.name for flag in cls.flags]  # type: ignore
+            FlagList,
+            lambda cls: [flag.name for flag in cls.flags],  # type: ignore
         )
         converter.register_unstructure_hook(NameRecord, lambda cls: cls.mapping)  # type: ignore
         return converter.unstructure(self)
