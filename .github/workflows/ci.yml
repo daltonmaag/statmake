@@ -66,7 +66,7 @@ jobs:
       - name: Build and publish
         env:
           UV_PUBLISH_USERNAME: ${{ secrets.PYPI_USERNAME }}
-          UV_PUBLISH_TOKEN: ${{ secrets.PYPI_PASSWORD }}
+          UV_PUBLISH_PASSWORD: ${{ secrets.PYPI_PASSWORD }}
         run: |
           uv build
           uv publish dist/*
