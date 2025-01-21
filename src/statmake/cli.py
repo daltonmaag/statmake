@@ -39,6 +39,11 @@ def main(args: Optional[List[str]] = None) -> None:
         help="Write the modified font to this path instead of in-place.",
     )
     parser.add_argument(
+        "--mac-names",
+        action="store_true",
+        help="Generate legacy Mac name entries for each default Windows name entry.",
+    )
+    parser.add_argument(
         "variable_font", type=Path, help="The path to the variable font file."
     )
     parsed_args = parser.parse_args(args)
@@ -57,7 +62,7 @@ def main(args: Optional[List[str]] = None) -> None:
     font = fontTools.ttLib.TTFont(parsed_args.variable_font)
     try:
         statmake.lib.apply_stylespace_to_variable_font(
-            stylespace, font, additional_locations
+            stylespace, font, additional_locations, mac_names=parsed_args.mac_names
         )
     except Error as e:
         logging.error("Cannot apply Stylespace to font: %s", str(e))
