@@ -72,4 +72,4 @@ jobs:
       - name: Build and publish
         run: |
           uv build
-          uv publish dist/*
+          uv publish
