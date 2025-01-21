@@ -61,7 +61,7 @@ def _generate_builder_data(
     # to axes not present in the current varfont.
     stylespace_stops: Dict[str, Set[float]] = {}
     for axis in stylespace.axes:
-        stylespace_stops[axis.tag] = {l.value for l in axis.locations}
+        stylespace_stops[axis.tag] = {location.value for location in axis.locations}
     for named_location in stylespace.locations:
         for name, value in named_location.axis_values.items():
             stylespace_stops[name_to_tag[name]].add(value)

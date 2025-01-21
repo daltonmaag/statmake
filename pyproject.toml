@@ -1,38 +1,49 @@
-[tool.poetry]
+[build-system]
+build-backend = "hatchling.build"
+requires = ["hatchling", "hatch-vcs"]
+
+[project]
 name = "statmake"
-version = "0.6.0"
+dynamic = ["version"]
 description = "Applies STAT information from a Stylespace to a variable font."
-authors = ["Nikolaus Waxweiler <nikolaus.waxweiler@daltonmaag.com>"]
-license = "MIT"
 readme = "README.md"
-repository = "https://github.com/daltonmaag/statmake"
-include = ["py.typed"]
+license = "MIT"
+requires-python = ">=3.8"
+authors = [
+    { name = "Nikolaus Waxweiler", email = "nikolaus.waxweiler@daltonmaag.com" },
+]
+classifiers = [
+    "Development Status :: 5 - Production/Stable",
+    "Programming Language :: Python",
+    "Programming Language :: Python :: 3.8",
+    "Programming Language :: Python :: 3.9",
+    "Programming Language :: Python :: 3.10",
+    "Programming Language :: Python :: 3.11",
+    "Programming Language :: Python :: 3.12",
+    "Programming Language :: Python :: 3.13",
+    "Programming Language :: Python :: Implementation :: CPython",
+    "Programming Language :: Python :: Implementation :: PyPy",
+]
+dependencies = ["attrs >= 21.3", "cattrs >= 22.2", "fonttools[ufo] >= 4.11"]
 
-[tool.poetry.dependencies]
-attrs = ">=21.3"
-cattrs = ">=22.2"
-fonttools = {version = ">=4.11", extras = ["ufo"]}
-python = "^3.8"
+[project.urls]
+Homepage = "https://github.com/daltonmaag/statmake"
 
-[tool.poetry.dev-dependencies]
-black = "*"
-coverage = "*"
-isort = "*"
-mypy = "*"
-pylint = ">=3"
-pytest = "*"
-ufo2ft = ">=2.7"
-ufoLib2 = ">=0.4"
+[project.scripts]
+stamake = "statmake.cli:main"
 
-[tool.poetry.scripts]
-statmake = "statmake.cli:main"
+[dependency-groups]
+dev = [
+    "mypy",
+    "pytest >= 8",
+    "pytest-cov >= 5",
+    "ruff >= 0.9",
+    "ufo2ft >= 2.7",
+    "ufoLib2 >= 0.4",
+]
 
-[tool.black]
-target-version = ["py38"]
-
-[tool.isort]
-profile = "black"
-known_first_party = "statmake"
+[tool.hatch.version]
+source = "vcs"
 
 [tool.mypy]
 python_version = "3.8"
@@ -63,31 +74,8 @@ module = [
 ]
 ignore_missing_imports = true
 
-[tool.pylint."MESSAGES CONTROL"]
-disable = [
-    "all",
-]
-enable = [
-    "E",
-    "F",
-    "anomalous-backslash-in-string",
-    "bad-format-string",
-    "bad-open-mode",
-    "binary-op-exception",
-    "duplicate-key",
-    "global-variable-not-assigned",
-    "unnecessary-semicolon",
-    "unreachable",
-    "unused-variable",
-    "unused-import",
-]
-
 [tool.pytest.ini_options]
 filterwarnings = [
     "ignore::DeprecationWarning:fs",
     "ignore::DeprecationWarning:pkg_resources",
 ]
-
-[build-system]
-requires = ["poetry-core"]
-build-backend = "poetry.core.masonry.api"
