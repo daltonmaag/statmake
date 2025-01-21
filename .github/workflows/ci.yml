@@ -25,7 +25,7 @@ jobs:
         with:
           version: "latest"
       - name: Lint and test
-        run: uvx --with tox-uv tox -p
+        run: uvx --with tox-uv tox --quiet run-parallel
 
   # https://packaging.python.org/en/latest/guides/publishing-package-distribution-releases-using-github-actions-ci-cd-workflows/
   deploy:
