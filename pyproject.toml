@@ -30,7 +30,7 @@ dependencies = ["attrs >= 21.3", "cattrs >= 22.2", "fonttools[ufo] >= 4.11"]
 Homepage = "https://github.com/daltonmaag/statmake"
 
 [project.scripts]
-stamake = "statmake.cli:main"
+statmake = "statmake.cli:main"
 
 [dependency-groups]
 dev = [
