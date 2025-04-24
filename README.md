@@ -44,3 +44,16 @@ Yes, but you have to convert it to `.plist` yourself, as statmake currently only
 ## Q: I'm getting errors about how statmake doesn't like the way I wrote the Stylespace, but I want the data to be that way?
 
 Use a custom script with the https://fonttools.readthedocs.io/en/latest/otlLib/builder.html#fontTools.otlLib.builder.buildStatTable API instead.
+
+## Development setup
+
+The project uses `uv`; install it from https://docs.astral.sh/uv/, and then:
+
+```bash
+# Install this project and its dependencies
+uv sync
+# Install tox globally for your user with uv support (if your other projects use it too)
+uv tool install tox --with tox-uv
+# Run tests on various Python versions
+tox
+```
