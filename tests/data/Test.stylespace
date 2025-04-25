@@ -194,5 +194,19 @@
       </dict>
 
     </array>
+
+    <!--
+      This name is used for the font if all other axis-value names have been
+      elided.
+
+      As with the name records above, it may be specified either as a string or as
+      a dictionary of IETF BCP 47 language codes to name strings, however, this
+      particular field may also be provided as a raw name ID integer when an
+      existing name table record should be explicitly reused.
+
+      If this property is absent, statmake will default to reusing nameID=2.
+    -->
+    <key>elided_fallback_name_id</key>
+    <string>Regular</string>
   </dict>
 </plist>
