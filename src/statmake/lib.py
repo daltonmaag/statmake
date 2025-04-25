@@ -190,6 +190,10 @@ def _sanity_check(
             f"for the following axes: {missing_axis_names}."
         )
 
+    # Sanity check: only allow raw fallback name IDs that are in this font.
+    if isinstance(stylespace.elided_fallback_name_id, int):
+        _default_name_string(varfont, stylespace.elided_fallback_name_id)
+
 
 def _default_name_string(otfont: fontTools.ttLib.TTFont, name_id: int) -> str:
     """Return English name for name_id."""
