@@ -39,7 +39,7 @@ def _generate_builder_data(
     varfont: fontTools.ttLib.TTFont,
     additional_locations: Mapping[str, float],
 ) -> Tuple[
-    List[Mapping[str, Any]], List[Mapping[str, Any]], Union[int, Mapping[str, str]]
+    List[Mapping[str, Any]], List[Mapping[str, Any]], Union[int, Dict[str, str]]
 ]:
     """Generate axes and locations dictionaries for use in
     fontTools.otlLib.builder.buildStatTable, tailored to the font.
@@ -121,7 +121,7 @@ def _generate_builder_data(
         elided_fallback = stylespace.elided_fallback_name_id
     else:
         # Otherwise, unwrap into the format that the builder expects.
-        elided_fallback = stylespace.elided_fallback_name_id.mapping
+        elided_fallback = dict(stylespace.elided_fallback_name_id.mapping)
 
     return builder_axes, builder_locations, elided_fallback
 
