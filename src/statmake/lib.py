@@ -1,5 +1,5 @@
 import collections
-from typing import Any, Dict, List, Mapping, Set, Tuple
+from typing import Any, Dict, List, Mapping, Set, Tuple, Union
 
 import fontTools.otlLib.builder
 import fontTools.ttLib
@@ -38,7 +38,9 @@ def _generate_builder_data(
     stylespace: statmake.classes.Stylespace,
     varfont: fontTools.ttLib.TTFont,
     additional_locations: Mapping[str, float],
-) -> Tuple[List[Mapping[str, Any]], List[Mapping[str, Any]], int]:
+) -> Tuple[
+    List[Mapping[str, Any]], List[Mapping[str, Any]], Union[int, Dict[str, str]]
+]:
     """Generate axes and locations dictionaries for use in
     fontTools.otlLib.builder.buildStatTable, tailored to the font.
 
@@ -113,7 +115,15 @@ def _generate_builder_data(
         )
     ]
 
-    return builder_axes, builder_locations, stylespace.elided_fallback_name_id
+    elided_fallback: Union[int, Mapping[str, str]]
+    if isinstance(stylespace.elided_fallback_name_id, int):
+        # Use a raw name ID directly.
+        elided_fallback = stylespace.elided_fallback_name_id
+    else:
+        # Otherwise, unwrap into the format that the builder expects.
+        elided_fallback = dict(stylespace.elided_fallback_name_id.mapping)
+
+    return builder_axes, builder_locations, elided_fallback
 
 
 def _sanity_check(
@@ -179,6 +189,10 @@ def _sanity_check(
             "The location of the font is not fully specified, missing locations "
             f"for the following axes: {missing_axis_names}."
         )
+
+    # Sanity check: only allow raw fallback name IDs that are in this font.
+    if isinstance(stylespace.elided_fallback_name_id, int):
+        _default_name_string(varfont, stylespace.elided_fallback_name_id)
 
 
 def _default_name_string(otfont: fontTools.ttLib.TTFont, name_id: int) -> str:

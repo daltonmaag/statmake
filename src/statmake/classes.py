@@ -144,11 +144,14 @@ class Axis:
     ordering: Optional[int] = None
 
 
+ElidedFallback = Union[NameRecord, int]
+
+
 @attrs.frozen
 class Stylespace:
     axes: List[Axis]
     locations: List[LocationFormat4] = attrs.field(factory=list)
-    elided_fallback_name_id: int = 2
+    elided_fallback_name_id: ElidedFallback = 2
 
     def __attrs_post_init__(self) -> None:
         """Fill in a default ordering unless the user specified at least one
@@ -254,6 +257,12 @@ class Stylespace:
         converter.register_structure_hook(
             NameRecord,
             lambda data, cls: cls.structure(data),  # type: ignore
+        )
+        converter.register_structure_hook(
+            ElidedFallback,
+            lambda data, _cls: data
+            if isinstance(data, int)
+            else NameRecord.structure(data),  # type: ignore
         )
         return converter.structure(dict_data, cls)
 

@@ -1,9 +1,7 @@
 import fontTools.designspaceLib
-import fontTools.otlLib.builder
 import pytest
 
 import statmake.classes
-import statmake.lib
 from statmake.errors import Error, StylespaceError
 
 from . import testutil
