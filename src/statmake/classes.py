@@ -1,8 +1,9 @@
 import enum
 import functools
 import os
+import warnings
 from pathlib import Path
-from typing import Any, Dict, List, Mapping, Optional, Set, Tuple, Union
+from typing import Any, Dict, List, Mapping, Optional, Set, Tuple, Type, Union
 
 import attrs
 import cattrs
@@ -141,7 +142,16 @@ class Axis:
     locations: List[Union[LocationFormat1, LocationFormat2, LocationFormat3]] = (
         attrs.field(factory=list)
     )
-    ordering: Optional[int] = None
+    _ordering: Optional[int] = None
+
+    @property
+    def ordering(self) -> Optional[int]:
+        warnings.warn(
+            "ordering is deprecated and will be removed in statmake v2.0.0",
+            DeprecationWarning,
+            stacklevel=2,
+        )
+        return self._ordering
 
 
 ElidedFallback = Union[NameRecord, int]
@@ -159,11 +169,12 @@ class Stylespace:
 
         This works around the frozen state with `object.__setattr__`.
         """
-        if all(axis.ordering is None for axis in self.axes):
+        if all(axis._ordering is None for axis in self.axes):
             for index, axis in enumerate(self.axes):
-                object.__setattr__(axis, "ordering", index)
+                object.__setattr__(axis, "_ordering", index)
         elif not all(
-            isinstance(axis.ordering, int) and axis.ordering >= 0 for axis in self.axes
+            isinstance(axis._ordering, int) and axis._ordering >= 0
+            for axis in self.axes
         ):
             raise StylespaceError(
                 "If you specify the ordering for one axis, you must specify all of "
@@ -247,7 +258,19 @@ class Stylespace:
         cls, dict_data: dict, detailed_validation: bool = False
     ) -> "Stylespace":
         """Construct Stylespace from unstructured dict data."""
+
+        def axis_hook(data: Dict[str, Any], cls: Type[Axis]) -> Axis:
+            # copy data, don't modify it
+            data = dict(data)
+            # attrs handles _named fields, but cattrs doesn't
+            data["_ordering"] = data.pop("ordering", None)
+            return converter.structure_attrs_fromdict(data, cls)
+
         converter = cattrs.Converter(detailed_validation=detailed_validation)
+        converter.register_structure_hook(
+            Axis,
+            axis_hook,
+        )
         converter.register_structure_hook(
             FlagList,
             lambda list_of_str_flags, cls: cls(  # type: ignore

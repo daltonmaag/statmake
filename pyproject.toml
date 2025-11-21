@@ -78,4 +78,5 @@ ignore_missing_imports = true
 filterwarnings = [
     "ignore::DeprecationWarning:fs",
     "ignore::DeprecationWarning:pkg_resources",
+    "ignore::DeprecationWarning:statmake",
 ]
