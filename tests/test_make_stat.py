@@ -12,11 +12,6 @@ def test_load_stylespace_broken_range(datadir):
         statmake.classes.Stylespace.from_file(datadir / "TestBroken.stylespace")
 
 
-def test_load_stylespace_broken_ordering(datadir):
-    with pytest.raises(StylespaceError, match=r".* ordering .*"):
-        statmake.classes.Stylespace.from_file(datadir / "TestBrokenAxes.stylespace")
-
-
 def test_load_stylespace_broken_format4_1(datadir):
     with pytest.raises(
         StylespaceError, match=r".* must specify values for all axes .*"

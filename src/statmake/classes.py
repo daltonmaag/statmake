@@ -1,9 +1,8 @@
 import enum
 import functools
 import os
-import warnings
 from pathlib import Path
-from typing import Any, Dict, List, Mapping, Optional, Set, Tuple, Type, Union
+from typing import Any, Dict, List, Mapping, Optional, Set, Tuple, Union
 
 import attrs
 import cattrs
@@ -142,16 +141,6 @@ class Axis:
     locations: List[Union[LocationFormat1, LocationFormat2, LocationFormat3]] = (
         attrs.field(factory=list)
     )
-    _ordering: Optional[int] = None
-
-    @property
-    def ordering(self) -> Optional[int]:
-        warnings.warn(
-            "ordering is deprecated and will be removed in statmake v2.0.0",
-            DeprecationWarning,
-            stacklevel=2,
-        )
-        return self._ordering
 
 
 ElidedFallback = Union[NameRecord, int]
@@ -164,23 +153,6 @@ class Stylespace:
     elided_fallback_name_id: ElidedFallback = 2
 
     def __attrs_post_init__(self) -> None:
-        """Fill in a default ordering unless the user specified at least one
-        custom one, also do sanity checking.
-
-        This works around the frozen state with `object.__setattr__`.
-        """
-        if all(axis._ordering is None for axis in self.axes):
-            for index, axis in enumerate(self.axes):
-                object.__setattr__(axis, "_ordering", index)
-        elif not all(
-            isinstance(axis._ordering, int) and axis._ordering >= 0
-            for axis in self.axes
-        ):
-            raise StylespaceError(
-                "If you specify the ordering for one axis, you must specify all of "
-                "them and they must be >= 0."
-            )
-
         # Ensure named locations only contain axis names that are present in the
         # Stylespace and specify a location for all axes.
         available_axes = {a.name.default for a in self.axes}
@@ -258,19 +230,7 @@ class Stylespace:
         cls, dict_data: dict, detailed_validation: bool = False
     ) -> "Stylespace":
         """Construct Stylespace from unstructured dict data."""
-
-        def axis_hook(data: Dict[str, Any], cls: Type[Axis]) -> Axis:
-            # copy data, don't modify it
-            data = dict(data)
-            # attrs handles _named fields, but cattrs doesn't
-            data["_ordering"] = data.pop("ordering", None)
-            return converter.structure_attrs_fromdict(data, cls)
-
         converter = cattrs.Converter(detailed_validation=detailed_validation)
-        converter.register_structure_hook(
-            Axis,
-            axis_hook,
-        )
         converter.register_structure_hook(
             FlagList,
             lambda list_of_str_flags, cls: cls(  # type: ignore

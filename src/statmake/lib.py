@@ -95,14 +95,14 @@ def _generate_builder_data(
         {
             "tag": axis.tag,
             "name": axis.name.mapping,
-            "ordering": axis.ordering,
+            "ordering": index,
             "values": [
                 location.to_builder_dict()
                 for location in axis.locations
                 if location.value in axis_stops[axis.tag]
             ],
         }
-        for axis in stylespace.axes
+        for index, axis in enumerate(stylespace.axes)
     ]
 
     # Generate format 4.

@@ -33,8 +33,6 @@
         <string>Weight</string>
         <key>tag</key>
         <string>wght</string>
-        <key>ordering</key>
-        <integer>0</integer>
       </dict>
       <dict>
         <key>locations</key>
@@ -50,8 +48,6 @@
         <string>Italic</string>
         <key>tag</key>
         <string>ital</string>
-        <key>ordering</key>
-        <integer>1</integer>
       </dict>
     </array>
     <key>elided_fallback_name_id</key>
