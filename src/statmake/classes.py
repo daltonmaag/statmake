@@ -306,10 +306,10 @@ class Stylespace:
         if stylespace_inline:
             return cls.from_dict(stylespace_inline)
 
-        if not designspace.path:
+        if not isinstance(designspace.path, str):
             raise StylespaceError(
                 "Designspace object must have `path` attribute set, because the "
                 "Stylespace path is relative to the Designspace file."
             )
-        stylespace_path_lookup = Path(designspace.path).parent / stylespace_path
+        stylespace_path_lookup = Path(designspace.path).parent / stylespace_path  # type: ignore
         return cls.from_file(stylespace_path_lookup)

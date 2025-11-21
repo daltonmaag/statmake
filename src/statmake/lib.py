@@ -3,6 +3,8 @@ from typing import Any, Dict, List, Mapping, Set, Tuple, Union
 
 import fontTools.otlLib.builder
 import fontTools.ttLib
+from fontTools.ttLib.tables._f_v_a_r import table__f_v_a_r as FvarTable
+from fontTools.ttLib.tables._n_a_m_e import table__n_a_m_e as NameTable
 
 import statmake.classes
 from statmake.errors import Error
@@ -30,7 +32,11 @@ def apply_stylespace_to_variable_font(
         stylespace, varfont, additional_locations
     )
     fontTools.otlLib.builder.buildStatTable(
-        varfont, axes, locations, elided_fallback_name, macNames=mac_names
+        varfont,
+        axes,
+        locations,
+        elided_fallback_name,  # type: ignore
+        macNames=mac_names,
     )
 
 
@@ -72,8 +78,10 @@ def _generate_builder_data(
         for name, value in named_location.axis_values.items():
             stylespace_stops[name_to_tag[name]].add(value)
 
+    fvar = varfont["fvar"]
+    assert isinstance(fvar, FvarTable)
     axis_stops: Mapping[str, Set[float]] = collections.defaultdict(set)  # tag to stops
-    for instance in varfont["fvar"].instances:
+    for instance in fvar.instances:
         for k, v in instance.coordinates.items():
             if v not in stylespace_stops[k]:
                 raise Error(
@@ -139,6 +147,8 @@ def _sanity_check(
             "Need a variable font with the fvar table to determine which instances "
             "are present."
         )
+    fvar = varfont["fvar"]
+    assert isinstance(fvar, FvarTable)
 
     # Sanity check: only allow axis names in additional_locations that are present in
     # the Stylespace.
@@ -154,7 +164,7 @@ def _sanity_check(
     # Sanity check: Ensure all font axes are present in the Stylespace and tags match.
     font_name_to_tag = {
         _default_name_string(varfont, axis.axisNameID): axis.axisTag
-        for axis in varfont["fvar"].axes
+        for axis in fvar.axes
     }
     for name, tag in font_name_to_tag.items():
         if name not in stylespace_name_to_tag:
@@ -197,7 +207,9 @@ def _sanity_check(
 
 def _default_name_string(otfont: fontTools.ttLib.TTFont, name_id: int) -> str:
     """Return English name for name_id."""
-    name = otfont["name"].getName(name_id, 3, 1, 0x409)
+    name_table = otfont["name"]
+    assert isinstance(name_table, NameTable)
+    name = name_table.getName(name_id, 3, 1, 0x409)
     if name is None:
         raise Error(f"No English record for id {name_id} for Windows platform.")
     return name.toStr()
