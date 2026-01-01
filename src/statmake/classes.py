@@ -2,7 +2,7 @@ import enum
 import functools
 import os
 from pathlib import Path
-from typing import Any, Dict, List, Mapping, Optional, Set, Tuple, Union
+from typing import Any, Dict, List, Mapping, Optional, Sequence, Set, Tuple, Union
 
 import attrs
 import cattrs
@@ -138,7 +138,7 @@ class LocationFormat4:
 class Axis:
     name: NameRecord
     tag: str
-    locations: List[Union[LocationFormat1, LocationFormat2, LocationFormat3]] = (
+    locations: Sequence[Union[LocationFormat1, LocationFormat2, LocationFormat3]] = (
         attrs.field(factory=list)
     )
 
